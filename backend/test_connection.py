@@ -3,7 +3,7 @@ import os
 from google import genai
 
 # Aapki direct credential key
-DIRECT_KEY = "Your_Api_Key"
+DIRECT_KEY = os.getenv("GOOGLE_API_KEY")
 
 def validate_api_connection():
     print("🔄 Checking API credentials boundary using new Google GenAI SDK...")
