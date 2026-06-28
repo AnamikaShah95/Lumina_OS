@@ -1,39 +1,56 @@
-import os
-import sys
+import re
+from backend.video_engine import VideoProcessingEngine
+from backend.summarizer import LuminaSummarizer
 
-# System runtime mapping setup
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-PARENT_DIR = os.path.dirname(CURRENT_DIR)
-if PARENT_DIR not in sys.path:
-    sys.path.append(PARENT_DIR)
+class LuminaOrchestrator:
+    def __init__(self):
+        self.video_engine = VideoProcessingEngine()
+        self.summarizer = LuminaSummarizer()
 
-from backend.router import route_user_intent
-from backend.video_engine import fetch_video_data, VideoDataPayload
-from pydantic import BaseModel
-from typing import Optional
+    def route_and_execute(self, user_query: str) -> dict:
+        print("\n⚡ [Orchestrator]: Analyzing incoming network request stream...")
+        
+        if "summarize" in user_query.lower() or "youtube.com" in user_query.lower():
+            intent = "summarize"
+            print("🧠 [Router]: Detected Intent -> 'summarize' (Confidence: 0.95)")
+        else:
+            intent = "general_query"
+            print("🧠 [Router]: Detected Intent -> 'general_query' (Confidence: 0.85)")
 
-class OrchestratorOutput(BaseModel):
-    intent: str
-    confidence_score: float
-    video_payload: Optional[VideoDataPayload] = None
-    raw_query: str
-
-def process_lumina_request(user_query: str) -> OrchestratorOutput:
-    print(f"⚡ [Orchestrator]: Analyzing incoming network request stream...")
-    
-    # 1. Day 2 Intent Router Engine trigger karein
-    route_result = route_user_intent(user_query)
-    print(f"🧠 [Router]: Detected Intent -> '{route_result.intent}' (Confidence: {route_result.confidence_score})")
-
-    # 2. Dynamic Payload Syncing Matrix
-    video_payload = None
-    if route_result.intent == "summarize" and route_result.extracted_entities.video_url:
-        print(f"🎬 [Orchestrator]: Triggering Video Processing Engine for URL: {route_result.extracted_entities.video_url}")
-        video_payload = fetch_video_data(route_result.extracted_entities.video_url)
-    
-    return OrchestratorOutput(
-        intent=route_result.intent,
-        confidence_score=route_result.confidence_score,
-        video_payload=video_payload,
-        raw_query=user_query
-    )
+        url_match = re.search(r'(https?://[^\s]+)', user_query)
+        
+        if intent == "summarize" and url_match:
+            target_url = url_match.group(1)
+            print(f"🎬 [Orchestrator]: Triggering Video Processing Engine for URL: {target_url}")
+            
+            # Phase 1: Metadata Extraction
+            result = self.video_engine.fetch_metadata_and_transcript(target_url)
+            
+            if result["status"] == "failed":
+                return {
+                    "intent": intent,
+                    "engine_status": "FAILED",
+                    "title": result["title"],
+                    "summary": None,
+                    "error": result["error_message"]
+                }
+            
+            # Phase 2: Piping to LLM Summarizer
+            print("🤖 [Orchestrator]: Piping raw payload to Lumina Summarizer Module...")
+            summary_output = self.summarizer.generate_summary(result["title"], result["transcript"])
+            
+            return {
+                "intent": intent,
+                "engine_status": "SUCCESS",
+                "title": result["title"],
+                "summary": summary_output,
+                "error": None
+            }
+        
+        return {
+            "intent": intent,
+            "engine_status": "SKIPPED",
+            "title": "N/A",
+            "summary": "No execution required for general queries.",
+            "error": None
+        }

@@ -1,4 +1,3 @@
-import os
 import re
 from typing import Optional
 from pydantic import BaseModel, Field
@@ -13,48 +12,61 @@ class VideoDataPayload(BaseModel):
     status: str = Field(description="Status of processing: 'success' or 'failed'")
     error_message: Optional[str] = Field(default=None)
 
-def extract_video_id(url: str) -> Optional[str]:
-    """
-    Extracts the 11-character YouTube video ID from various URL formats.
-    """
-    match = re.search(r'(?:https?://)?(?:www\.)?(?:youtube\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})', url)
-    return match.group(1) if match else None
+# 2. Main Processing Core Engine Execution Block
+class VideoProcessingEngine:
+    def __init__(self):
+        pass
 
-def fetch_video_data(video_url: str) -> VideoDataPayload:
-    """
-    Fetches Title and Transcripts from a YouTube URL and binds it into a structured payload.
-    """
-    video_id = extract_video_id(video_url)
-    if not video_id:
-        return VideoDataPayload(video_id="unknown", status="failed", error_message="Invalid YouTube URL format.")
+    def extract_video_id(self, url: str) -> Optional[str]:
+        """
+        Extracts the 11-character YouTube video ID using regex boundary patterns.
+        """
+        pattern = r'(?:v=|\/)([0-9A-Za-z_-]{11}).*'
+        match = re.search(pattern, url)
+        return match.group(1) if match else None
 
-    title = "Unknown Title"
-    transcript_text = ""
+    def fetch_metadata_and_transcript(self, url: str) -> dict:
+        """
+        Extracts title via yt-dlp and downloads transcript, formatting output into structural dict matching the BaseModel.
+        """
+        video_id = self.extract_video_id(url)
+        if not video_id:
+            return {
+                "status": "failed",
+                "video_id": "N/A",
+                "title": "Unknown Title",
+                "transcript": None,
+                "error_message": "Invalid YouTube URL format."
+            }
 
-    # Part A: Extract Title using yt-dlp
-    try:
-        ydl_opts = {'skip_download': True, 'quiet': True}
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(f"https://www.youtube.com/watch?v={video_id}", download=False)
-            title = info.get('title', 'Unknown Title')
-    except Exception as e:
-        print(f"⚠️ Metadata extraction warning: {str(e)}")
+        # Fetching Video Title securely via yt-dlp metadata boundary
+        video_title = "Unknown Title"
+        ydl_opts = {'quiet': True, 'skip_download': True}
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=False)
+                video_title = info.get('title', 'Unknown Title')
+        except Exception as e:
+            print(f"⚠️ Metadata extraction warning: {str(e)}")
 
-    # Part B: Extract Transcript
-    try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'hi'])
-        transcript_text = " ".join([item['text'] for item in transcript_list])
-        
-        return VideoDataPayload(
-            video_id=video_id,
-            title=title,
-            transcript=transcript_text,
-            status="success"
-        )
-    except Exception as e:
-        return VideoDataPayload(
-            video_id=video_id,
-            title=title,
-            status="failed",
-            error_message=f"Transcript extraction failed: {str(e)}"
-        )
+        # Fetching Video Subtitles via transcript engine socket
+        try:
+            transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'en-US'])
+            full_transcript = " ".join([chunk['text'] for chunk in transcript_list])
+            
+            # Formatting structural dictionary data matching Pydantic expectations
+            return {
+                "status": "success",
+                "video_id": video_id,
+                "title": video_title,
+                "transcript": full_transcript,
+                "error_message": None
+            }
+        except Exception as e:
+            return {
+                "status": "failed",
+                "video_id": video_id,
+                "title": video_title,
+                "transcript": None,
+                "error_message": f"Transcript extraction failed: {str(e)}"
+            }
