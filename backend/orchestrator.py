@@ -1,11 +1,13 @@
 import re
 from backend.video_engine import VideoProcessingEngine
 from backend.summarizer import LuminaSummarizer
+from backend.ppt_generator import LuminaPPTGenerator
 
 class LuminaOrchestrator:
     def __init__(self):
         self.video_engine = VideoProcessingEngine()
         self.summarizer = LuminaSummarizer()
+        self.ppt_generator = LuminaPPTGenerator() # Day 5 Matrix Included
 
     def route_and_execute(self, user_query: str) -> dict:
         print("\n⚡ [Orchestrator]: Analyzing incoming network request stream...")
@@ -23,7 +25,7 @@ class LuminaOrchestrator:
             target_url = url_match.group(1)
             print(f"🎬 [Orchestrator]: Triggering Video Processing Engine for URL: {target_url}")
             
-            # Phase 1: Metadata Extraction
+            # Phase 1: Transcript Extraction
             result = self.video_engine.fetch_metadata_and_transcript(target_url)
             
             if result["status"] == "failed":
@@ -32,6 +34,7 @@ class LuminaOrchestrator:
                     "engine_status": "FAILED",
                     "title": result["title"],
                     "summary": None,
+                    "presentation_data": None,
                     "error": result["error_message"]
                 }
             
@@ -39,18 +42,24 @@ class LuminaOrchestrator:
             print("🤖 [Orchestrator]: Piping raw payload to Lumina Summarizer Module...")
             summary_output = self.summarizer.generate_summary(result["title"], result["transcript"])
             
+            # Phase 3: Converting Summary to Slide Structural Objects (Day 5 Integration)
+            print("📊 [Orchestrator]: Sending markdown text downstream to PPT Payload Architect...")
+            ppt_result = self.ppt_generator.transform_summary_to_slides(result["title"], summary_output)
+            
             return {
                 "intent": intent,
                 "engine_status": "SUCCESS",
                 "title": result["title"],
                 "summary": summary_output,
-                "error": None
+                "presentation_data": ppt_result["data"] if ppt_result["status"] == "success" else None,
+                "error": ppt_result["error"]
             }
         
         return {
             "intent": intent,
             "engine_status": "SKIPPED",
             "title": "N/A",
-            "summary": "No execution required for general queries.",
+            "summary": "No execution required.",
+            "presentation_data": None,
             "error": None
         }
