@@ -9,7 +9,10 @@ class LuminaOrchestrator:
         self.summarizer = LuminaSummarizer()
         self.ppt_generator = LuminaPPTGenerator()
 
-    def route_and_execute(self, user_query: str) -> dict:
+    def route_and_execute(self, user_query: str, target_slides: int = 7, audience_level: str = "Advanced Engineering") -> dict:
+        """
+        Day 10 Upgrade: Added explicit named arguments to route variables seamlessly without text appending hacks.
+        """
         print("\n⚡ [Orchestrator]: Analyzing incoming network request stream...")
         
         if "summarize" in user_query.lower() or "youtube.com" in user_query.lower():
@@ -28,20 +31,22 @@ class LuminaOrchestrator:
             
             if result["status"] == "failed":
                 return {
-                    "intent": intent,
-                    "engine_status": "FAILED",
-                    "title": result["title"],
-                    "file_path": None,
-                    "error": result["error_message"]
+                    "intent": intent, "engine_status": "FAILED", "title": result["title"],
+                    "file_path": None, "error": result["error_message"]
                 }
             
             # Phase 2: Summarizer
             print("🤖 [Orchestrator]: Piping raw payload to Lumina Summarizer Module...")
             summary_output = self.summarizer.generate_summary(result["title"], result["transcript"])
             
-            # Phase 3: JSON Slide Blueprint Generation
-            print("📊 [Orchestrator]: Sending markdown text downstream to PPT Payload Architect...")
-            ppt_result = self.ppt_generator.transform_summary_to_slides(result["title"], summary_output)
+            # Phase 3: Context-Injected Slide Payload Blueprint Generation
+            print("📊 [Orchestrator]: Injecting user rules directly down into PPT Payload Architect...")
+            ppt_result = self.ppt_generator.transform_summary_to_slides(
+                video_title=result["title"], 
+                summary_text=summary_output, 
+                target_slides=target_slides, 
+                audience_level=audience_level
+            )
             
             if ppt_result["status"] == "failed":
                 return {
@@ -49,17 +54,14 @@ class LuminaOrchestrator:
                     "file_path": None, "error": ppt_result["error"]
                 }
             
-            # Phase 4: Physical PPTX File Generation (Day 6 Automation)
+            # Phase 4: Physical PPTX File Generation
             file_path = self.ppt_generator.generate_actual_pptx(ppt_result["data"], "Lumina_Presentation.pptx")
             
             return {
-                "intent": intent,
-                "engine_status": "SUCCESS",
-                "title": result["title"],
-                "file_path": file_path,
-                "error": None
+                "intent": intent, "engine_status": "SUCCESS", "title": result["title"],
+                "file_path": file_path, "error": None
             }
         
         return {
-            "intent": intent, "engine_status": "SKIPPED", "title": "N/A", "file_path": None, "error": None
+            "intent": intent, "engine_status": "SKIPPED", "title": "N/A", "summary": "No execution required.", "file_path": None, "error": None
         }
