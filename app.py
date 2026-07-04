@@ -9,49 +9,38 @@ except Exception as e:
     orchestrator = None
 
 def lumina_ui_driver(user_input: str, slide_count: int, audience_level: str):
+    """
+    Day 11 Async Driver: Iterates over the orchestrator engine state generators.
+    Streams runtime status updates continuously back onto the frontend elements.
+    """
     if not orchestrator:
-        return "❌ Central Engine is not initialized properly. Check environment keys.", None
+        yield "❌ Central Engine is not initialized properly. Check environment keys.", None
+        return
         
     if not user_input.strip():
-        return "⚠️ Please enter a valid query or YouTube URL.", None
+        yield "⚠️ Please enter a valid query or YouTube URL.", None
+        return
 
     try:
-        print(f"\n📥 [UI Driver]: Passing cleanly parsed parameters down to Orchestrator context tree...")
-        # Day 10 Refinement: Passing explicit keyword variables clean into the execution core
-        response = orchestrator.route_and_execute(
+        print(f"\n📥 [UI Driver]: Initializing async background process iteration thread...")
+        
+        # Iterating directly through generator ticks to stream logs asynchronously
+        for log_update, target_file_path in orchestrator.route_and_execute_stream(
             user_query=user_input, 
             target_slides=slide_count, 
             audience_level=audience_level
-        )
-        
-        if response["engine_status"] == "SUCCESS":
-            status_msg = (
-                f"🎉 **Success!**\n\n"
-                f"🎬 **Video Title:** {response['title']}\n"
-                f"📊 **Target Rule Enforced:** Exactly {slide_count} Slides Generated for '{audience_level}' Depth.\n"
-                f"💾 **PowerPoint File Compiled:** Local directory saved successfully!"
-            )
-            return status_msg, response["file_path"]
-            
-        elif response["engine_status"] == "FAILED":
-            error_msg = (
-                f"❌ **Processing Failed Gracefully**\n\n"
-                f"⚠️ **Context:** {response['error']}\n\n"
-                f"💡 *Note: The parameter injection layer is fully responsive. Network scraper endpoint throttling detected.*"
-            )
-            return error_msg, None
-            
-        else:
-            return f"🧠 **Router Intelligence:** Internal workflow executed successfully.", None
+        ):
+            # Dynamic mid-execution state assignment safely onto web components
+            yield log_update, target_file_path
 
     except Exception as fatal_err:
         print(f"🚨 Runtime Exception caught inside UI driver boundary: {str(fatal_err)}")
-        return f"⚡ **Connection Anomaly:** Process thread managed effectively: {str(fatal_err)}", None
+        yield f"⚡ **Connection Anomaly:** Process loop managed safely: {str(fatal_err)}", None
 
 with gr.Blocks() as lumina_interface:
     gr.Markdown(
         """
-        # 🎬 Lumina Video Architect - OS Frontend Core v2.1
+        # 🎬 Lumina Video Architect - OS Frontend Core v2.2 (Async Engine)
         ### Transform video data streams into custom, automated PowerPoint presentations with fine-tuned user controls.
         """
     )
@@ -82,5 +71,5 @@ with gr.Blocks() as lumina_interface:
     )
 
 if __name__ == "__main__":
-    print("🌐 Launching custom-configured local Gradio interface engine...")
+    print("🌐 Launching custom-configured async local Gradio interface engine...")
     lumina_interface.launch(server_name="127.0.0.1", server_port=7860, share=False, theme=gr.themes.Soft())

@@ -1,4 +1,5 @@
 import re
+import time
 from backend.video_engine import VideoProcessingEngine
 from backend.summarizer import LuminaSummarizer
 from backend.ppt_generator import LuminaPPTGenerator
@@ -9,11 +10,13 @@ class LuminaOrchestrator:
         self.summarizer = LuminaSummarizer()
         self.ppt_generator = LuminaPPTGenerator()
 
-    def route_and_execute(self, user_query: str, target_slides: int = 7, audience_level: str = "Advanced Engineering") -> dict:
+    def route_and_execute_stream(self, user_query: str, target_slides: int = 7, audience_level: str = "Advanced Engineering"):
         """
-        Day 10 Upgrade: Added explicit named arguments to route variables seamlessly without text appending hacks.
+        Day 11 Upgrade: Refactored from traditional returns to a Python Generator Matrix.
+        Yields sequential state-logs dynamically to update frontend components asynchronously.
         """
-        print("\n⚡ [Orchestrator]: Analyzing incoming network request stream...")
+        yield "⏳ [Pipeline]: Analyzing network request stream and analyzing intent...", None
+        time.sleep(0.5)
         
         if "summarize" in user_query.lower() or "youtube.com" in user_query.lower():
             intent = "summarize"
@@ -24,23 +27,23 @@ class LuminaOrchestrator:
         
         if intent == "summarize" and url_match:
             target_url = url_match.group(1)
-            print(f"🎬 [Orchestrator]: Triggering Video Processing Engine for URL: {target_url}")
+            yield f"🎬 [Pipeline]: Intent Identified -> Video Processing Layer. Target URL: {target_url}", None
             
-            # Phase 1: Transcript Extraction
+            # Phase 1: Scraping and Transcript download
+            yield "📡 [Pipeline Phase 1]: Initializing stream scrapers to fetch metadata & transcripts...", None
             result = self.video_engine.fetch_metadata_and_transcript(target_url)
             
             if result["status"] == "failed":
-                return {
-                    "intent": intent, "engine_status": "FAILED", "title": result["title"],
-                    "file_path": None, "error": result["error_message"]
-                }
+                error_msg = f"❌ Processing Blocked: {result['error_message']}"
+                yield error_msg, None
+                return
             
-            # Phase 2: Summarizer
-            print("🤖 [Orchestrator]: Piping raw payload to Lumina Summarizer Module...")
+            # Phase 2: Summarization Core
+            yield f"🤖 [Pipeline Phase 2]: Extraction Success for '{result['title']}'. Piping to LLM Summarizer...", None
             summary_output = self.summarizer.generate_summary(result["title"], result["transcript"])
             
-            # Phase 3: Context-Injected Slide Payload Blueprint Generation
-            print("📊 [Orchestrator]: Injecting user rules directly down into PPT Payload Architect...")
+            # Phase 3: Slide Deck Payloads Architecture
+            yield f"📊 [Pipeline Phase 3]: Injecting rules -> Enforcing {target_slides} slides ({audience_level} Depth)...", None
             ppt_result = self.ppt_generator.transform_summary_to_slides(
                 video_title=result["title"], 
                 summary_text=summary_output, 
@@ -49,19 +52,21 @@ class LuminaOrchestrator:
             )
             
             if ppt_result["status"] == "failed":
-                return {
-                    "intent": intent, "engine_status": "FAILED", "title": result["title"],
-                    "file_path": None, "error": ppt_result["error"]
-                }
+                yield f"❌ Structuring Failed: {ppt_result['error']}", None
+                return
             
-            # Phase 4: Physical PPTX File Generation
+            # Phase 4: Compiling Physical PPTX file
+            yield "💾 [Pipeline Phase 4]: Compiling structural components into standard physical PowerPoint slides...", None
             file_path = self.ppt_generator.generate_actual_pptx(ppt_result["data"], "Lumina_Presentation.pptx")
             
-            return {
-                "intent": intent, "engine_status": "SUCCESS", "title": result["title"],
-                "file_path": file_path, "error": None
-            }
-        
-        return {
-            "intent": intent, "engine_status": "SKIPPED", "title": "N/A", "summary": "No execution required.", "file_path": None, "error": None
-        }
+            success_status = (
+                f"🎉 **Success! Application Layer Complete.**\n\n"
+                f"🎬 **Video Title:** {result['title']}\n"
+                f"📊 **Rules Enforced:** Exactly {target_slides} Slides Generated for '{audience_level}' Depth.\n"
+                f"💾 **File State:** Compiled safely in local system memory storage workspace."
+            )
+            yield success_status, file_path
+            return
+
+        yield "🧠 [Router Intelligence]: Routing criteria skipped. No background process required.", None
+        return
