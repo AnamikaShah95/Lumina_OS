@@ -15,20 +15,23 @@ class LuminaPPTGenerator:
 
     def transform_summary_to_slides(self, video_title: str, summary_text: str, target_slides: int, audience_level: str) -> dict:
         """
-        Day 10 Upgrade: Injects dynamic user configurations directly into the LLM context stream.
+        Day 13 Schema Tuning Upgrade: Injects rigid formatting boundaries directly matching Pydantic definitions.
         """
-        print(f"🎨 [PPT Generator]: Injecting pipeline parameters -> Target Slides: {target_slides} | Depth: {audience_level}")
+        print(f"🎨 [PPT Generator]: Aligning explicit strict arrays -> Targets: {target_slides} slides ({audience_level})")
         
-        # Crafting an adaptive, context-aware prompt matrix
+        # Structuring a zero-deviation instructions matrix to secure Pydantic compilation layers
         prompt = f"""
-        You are a Master Presentation Designer. Convert the following technical video summary into a clean, slide-by-slide presentation structure.
-        
-        CRITICAL CUSTOM RULES:
-        1. You MUST generate EXACTLY {target_slides} structured content slides (excluding title slide logic).
-        2. Tailor the language complexity, depth, and technical density specifically for an audience level of: '{audience_level}'.
-        
-        Video Title: {video_title}
-        Source Summary Text:
+        You are an expert Enterprise AI Slide Architect. Your sole directive is to parse the source technical summary block and structure it into a valid JSON schema payload matching the exact shape required.
+
+        CRITICAL CONSTRAINTS:
+        1. You must create exactly {target_slides} individual items inside the 'slides' list block array. No more, no less.
+        2. Set the 'total_slides' field integer value to exactly equal {target_slides}.
+        3. Customize the content depth density precisely targeting the linguistic footprint profile of an expert tracking: '{audience_level}'.
+        4. Inside every slide object entity, the 'bullet_points' array field MUST contain a strict count list between 3 to 5 clear strings.
+
+        Metadata Context:
+        Master Title: {video_title}
+        Source Text Component Payload:
         {summary_text}
         """
         try:
@@ -41,24 +44,26 @@ class LuminaPPTGenerator:
                 }
             )
             structured_data = json.loads(response.text)
+            print(f"✅ [PPT Generator]: LLM Generation succeeded. Array length confirmed at: {len(structured_data.get('slides', []))}")
             return {"status": "success", "data": structured_data, "error": None}
         except Exception as e:
-            return {"status": "failed", "data": None, "error": f"Presentation Layer Structuring Failed: {str(e)}"}
+            print(f"🚨 [Schema Fault]: Generation serialization anomaly: {str(e)}")
+            return {"status": "failed", "data": None, "error": f"Schema Presentation Structuring Failed: {str(e)}"}
 
     def generate_actual_pptx(self, structured_data: dict, output_filename: str = "presentation.pptx") -> str:
-        print("🛠️ [PPT Generator]: Creating physical PowerPoint slides via python-pptx...")
+        print("🛠️ [PPT Generator]: Building file blocks via python-pptx presentation core...")
         prs = Presentation()
         
-        # Title Slide (Slide Layout 0)
+        # Title Slide Frame Layout
         title_slide_layout = prs.slide_layouts[0]
         slide = prs.slides.add_slide(title_slide_layout)
         title = slide.shapes.title
         subtitle = slide.placeholders[1]
         
         title.text = structured_data.get("topic", "Lumina OS Presentation")
-        subtitle.text = f"Automated Engineering Analytics\nTotal Slides: {structured_data.get('total_slides', 0)}"
+        subtitle.text = f"Automated Engineering Analytics\nTarget Audience Profile: Open Ecosystem\nTotal Content Structures: {structured_data.get('total_slides', 0)}"
         
-        # Content Slides Loop
+        # Generating Slide Loop Framework Rows
         for slide_data in structured_data.get("slides", []):
             blank_layout = prs.slide_layouts[1]
             slide = prs.slides.add_slide(blank_layout)
