@@ -7,7 +7,7 @@ from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import PP_ALIGN
-#  NEW EXPLICIT XML STRUCTURAL TARGETS
+#  CLEAN OPENXML NAMESPACE (Removed duplicate broken line 9)
 from pptx.oxml.xmlchemy import OxmlElement
 from pptx.oxml.ns import qn
 from config.settings import GEMINI_API_KEY
@@ -20,17 +20,17 @@ class LuminaPPTGenerator:
         self.client = genai.Client(api_key=GEMINI_API_KEY)
         self.model_name = 'gemini-2.5-flash'
 
-        # Premium Layout Design Tokens Grid (Kawaii Dark Matrix Palette)
-        self.COLOR_BG = RGBColor(24, 26, 37)           # Deeper Eclipse Matte Navy
-        self.COLOR_CARD_BG = RGBColor(35, 38, 55)      # Soft Glassmorphism Card Fill
+        # Premium Corporate Design Tokens Palette
+        self.COLOR_BG = RGBColor(24, 26, 37)           # Eclipse Matte Navy
+        self.COLOR_CARD_BG = RGBColor(35, 38, 55)      # Glassmorphism Card Fill
         self.COLOR_TEXT_MAIN = RGBColor(248, 248, 242) # Pearl White Core
         self.COLOR_ACCENT = RGBColor(189, 147, 249)    # Neon Kawaii Purple
         self.COLOR_MUTED = RGBColor(139, 233, 253)     # Cyber Cyan Core Accent
 
     def transform_summary_to_slides(self, video_title: str, summary_text: str, target_slides: int, audience_level: str) -> dict:
-        print(f"📊 [PPT Engine]: Instructing structural payload maps over internal LLM boundaries...")
+        print(f"📊 [PPT Engine]: Instructing structural payload transformations via Gemini schemas...")
         prompt = f"""
-        You are an expert Enterprise AI Slide Architect. Parse the input text blocks and structure it into a clean JSON schema payload matching the exact shape.
+        You are an expert Enterprise AI Slide Architect. Parse the input summary segments and structure it into a clean JSON schema payload matching the exact shape.
 
         CRITICAL CONSTRAINTS:
         1. Create exactly {target_slides} individual items inside the 'slides' list block array.
@@ -105,28 +105,43 @@ class LuminaPPTGenerator:
         p.alignment = PP_ALIGN.CENTER
 
     def _inject_fade_transition(self, slide):
-        """
-        Day 21 Animation Core Injection Subsystem.
-        Accesses presentation XML layout trees directly via OpenXML elements
-        and forces dynamic fade transitions schema configuration boundaries.
-        """
         slide_element = slide.element
-        # Creating OpenXML element tag mapped inside presentation markup properties rules
         transition_node = OxmlElement('p:transition')
-        
-        # Mapping specific animation attributes schemas ('spd' sets transition processing speed)
         transition_node.set('spd', 'fast')
-        
-        # Appending explicit fade animation type marker tag inside XML root node
         fade_node = OxmlElement('p:fade')
         transition_node.append(fade_node)
-        
-        # Injecting built node configuration directly onto the slide element tree matrix
         slide_element.append(transition_node)
-        print("🎭 [Animation Layer]: Injected fluid XML Fade Transition metadata element successfully.")
+
+    def _format_rich_bullet_point(self, paragraph, text: str, font_size_pt: int = 13):
+        """
+        Day 22 Core Addition: Rich Typography Paragraph Formatter.
+        Applies precise line-spacing multipliers, whitespace rules, and
+        injects distinct typography runs for clean structural layout density.
+        """
+        paragraph.text = "" # Clearing default text allocations
+        
+        # 1. Injecting exact line spacing parameters configuration
+        paragraph.line_spacing = 1.3               # Line Spacing Multiplier (Clean corporate layout standard)
+        paragraph.space_before = Pt(4)             # Padding cushion atop paragraph boundaries
+        paragraph.space_after = Pt(12)             # Structural spacing breakdown between text list rows
+        
+        # 2. Separating bullet marker run block for premium aesthetic alignment
+        marker_run = paragraph.add_run()
+        marker_run.text = "▪  "
+        marker_run.font.name = 'Segoe UI'
+        marker_run.font.size = Pt(font_size_pt - 1)
+        marker_run.font.bold = True
+        marker_run.font.color.rgb = self.COLOR_MUTED # Giving cyan highlights to checkboxes markers
+        
+        # 3. Main Text Core Body Run block
+        body_run = paragraph.add_run()
+        body_run.text = text
+        body_run.font.name = 'Calibri'
+        body_run.font.size = Pt(font_size_pt)
+        body_run.font.color.rgb = self.COLOR_TEXT_MAIN
 
     def generate_actual_pptx(self, structured_data: dict, output_filename: str = "presentation.pptx") -> str:
-        print("🛠️ [Animation Architect]: Generating transition-aware layout sheets via framework streams...")
+        print("🛠️ [Typography Architect]: Compiling rich paragraph templates with custom runs...")
         prs = Presentation()
         prs.slide_width = Inches(10)
         prs.slide_height = Inches(7.5)
@@ -137,7 +152,7 @@ class LuminaPPTGenerator:
         # ----------------------------------------------------------------------
         slide = prs.slides.add_slide(blank_layout)
         self._apply_background(slide)
-        self._inject_fade_transition(slide) # Activating transitions mapping hooks
+        self._inject_fade_transition(slide)
 
         master_topic = structured_data.get("topic", "Lumina OS Visual Core").upper()
         dynamic_title_font_size = self._compute_adaptive_font_size(master_topic)
@@ -153,19 +168,19 @@ class LuminaPPTGenerator:
         p.font.color.rgb = self.COLOR_ACCENT
 
         p2 = tf.add_paragraph()
-        p2.text = f"Dynamic Animation Transition Injection Pipeline\nOpenXML OxmlElement Integration Matrix | Nodes: {structured_data.get('total_slides', 0)}"
+        p2.text = f"Rich Text Run Component Processing Subsystem\nLine Spacing Multiplier: 1.3 Tracker Grid | Total Processed Nodes: {structured_data.get('total_slides', 0)}"
         p2.font.name = 'Segoe UI'
         p2.font.size = Pt(13)
         p2.font.color.rgb = self.COLOR_MUTED
         p2.space_before = Pt(20)
 
         # ----------------------------------------------------------------------
-        # THREE-ZONE PRESENTATION LOOP WITH MOVEMENT MARKERS
+        # THREE-ZONE INFOGRAPHIC SLIDES GENERATION LOOP
         # ----------------------------------------------------------------------
         for slide_data in structured_data.get("slides", []):
             slide = prs.slides.add_slide(blank_layout)
             self._apply_background(slide)
-            self._inject_fade_transition(slide) # Locking fade attributes onto structural layers
+            self._inject_fade_transition(slide)
 
             slide_title_text = f"{slide_data.get('slide_number')}. {slide_data.get('title')}"
             local_slide_font_size = self._compute_adaptive_font_size(slide_title_text)
@@ -191,14 +206,14 @@ class LuminaPPTGenerator:
             card_height = Inches(4.8)
             content_top_offset = Inches(1.8)
 
-            # ZONE 1: Context Graphic Core Placeholder
+            # ZONE 1: Context Graphic Placeholder
             img_left_start = Inches(0.75)
             self._generate_mock_visual_placeholder(
                 slide=slide, left=img_left_start, top=content_top_offset, width=img_width, height=card_height, 
                 placeholder_text=slide_data.get('title', 'Analytics Data Core')
             )
 
-            # ZONE 2: TEXT CONTENT COLUMN A (Middle Position)
+            # ZONE 2: TEXT CONTENT COLUMN A (Middle Position with Rich Formatting)
             col_left_start = Inches(3.6)
             self._draw_content_card(slide, col_left_start, content_top_offset, col_width, card_height)
             
@@ -208,13 +223,9 @@ class LuminaPPTGenerator:
 
             for i, pt_text in enumerate(left_points):
                 p_pt = tf_left.paragraphs[0] if i == 0 else tf_left.add_paragraph()
-                p_pt.text = f"▪ {pt_text}"
-                p_pt.font.name = 'Calibri'
-                p_pt.font.size = Pt(13)
-                p_pt.font.color.rgb = self.COLOR_TEXT_MAIN
-                p_pt.space_after = Pt(12)
+                self._format_rich_bullet_point(p_pt, pt_text, font_size_pt=13)
 
-            # ZONE 3: TEXT CONTENT COLUMN B (Right Margin Position)
+            # ZONE 3: TEXT CONTENT COLUMN B (Right Position with Rich Formatting)
             col_right_start = Inches(6.55)
             self._draw_content_card(slide, col_right_start, content_top_offset, col_width, card_height)
             
@@ -224,11 +235,7 @@ class LuminaPPTGenerator:
 
             for i, pt_text in enumerate(right_points):
                 p_pt = tf_right.paragraphs[0] if i == 0 else tf_right.add_paragraph()
-                p_pt.text = f"▪ {pt_text}"
-                p_pt.font.name = 'Calibri'
-                p_pt.font.size = Pt(13)
-                p_pt.font.color.rgb = self.COLOR_TEXT_MAIN
-                p_pt.space_after = Pt(12)
+                self._format_rich_bullet_point(p_pt, pt_text, font_size_pt=13)
 
         output_dir = "output"
         if not os.path.exists(output_dir):
@@ -236,5 +243,5 @@ class LuminaPPTGenerator:
             
         final_path = os.path.join(output_dir, output_filename)
         prs.save(final_path)
-        print(f"💾 [Animation Architect]: Animated presentations compiled successfully at: {final_path}")
+        print(f"💾 [Typography Architect]: Rich paragraph style presentation saved safely at: {final_path}")
         return final_path
