@@ -7,7 +7,6 @@ from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import PP_ALIGN
-#  FIXED IMPORTS: Explicit XML Target Mapping
 from pptx.oxml.xmlchemy import OxmlElement
 from pptx.oxml.ns import qn
 from config.settings import GEMINI_API_KEY
@@ -20,16 +19,16 @@ class LuminaPPTGenerator:
         self.client = genai.Client(api_key=GEMINI_API_KEY)
         self.model_name = 'gemini-2.5-flash'
 
-        # Day 23 Branding Palette: Matte Night Core
-        self.COLOR_BG = RGBColor(20, 21, 30)           # Deep Eclipse Navy
-        self.COLOR_ACCENT_BG = RGBColor(28, 30, 43)    # Structural Overlay Mesh
-        self.COLOR_CARD_BG = RGBColor(35, 38, 55)      # Soft Glassmorphism Fill
-        self.COLOR_TEXT_MAIN = RGBColor(248, 248, 242) # Pearl White
-        self.COLOR_ACCENT = RGBColor(189, 147, 249)    # Kawaii Purple
-        self.COLOR_MUTED = RGBColor(139, 233, 253)     # Cyber Cyan
+        # Premium Corporate Design Tokens Palette
+        self.COLOR_BG = RGBColor(20, 21, 30)           # Shadow Eclipse Navy
+        self.COLOR_ACCENT_BG = RGBColor(28, 30, 43)    # Subtle Accent Backdrop Mesh
+        self.COLOR_CARD_BG = RGBColor(35, 38, 55)      # Glassmorphism Card Fill
+        self.COLOR_TEXT_MAIN = RGBColor(248, 248, 242) # Pearl White Core
+        self.COLOR_ACCENT = RGBColor(189, 147, 249)    # Neon Kawaii Purple
+        self.COLOR_MUTED = RGBColor(139, 233, 253)     # Cyber Cyan Core Accent
 
     def transform_summary_to_slides(self, video_title: str, summary_text: str, target_slides: int, audience_level: str) -> dict:
-        print(f"📊 [PPT Engine]: Transforming video metadata boundaries matching generative JSON schemas...")
+        print(f"📊 [PPT Engine]: Instructing structural payload transformations via Gemini schemas...")
         prompt = f"""
         You are an expert Enterprise AI Slide Architect. Parse the input summaries and structure it into a clean JSON schema payload matching the exact shape.
 
@@ -60,33 +59,21 @@ class LuminaPPTGenerator:
             return {"status": "failed", "data": None, "error": str(e)}
 
     def _apply_background_with_geometric_accents(self, slide):
-        """
-        Day 23 Architectural Layer: Drawing structural vector underlays.
-        """
-        # 1. Base Night Layer
         base_shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0), Inches(0), Inches(10), Inches(7.5))
         base_shape.fill.solid()
         base_shape.fill.fore_color.rgb = self.COLOR_BG
         base_shape.line.fill.background()
 
-        # 2. Top-Right Diagonal Triangle (Accent Depth)
         accent_block = slide.shapes.add_shape(MSO_SHAPE.RIGHT_TRIANGLE, Inches(5.5), Inches(0), Inches(4.5), Inches(4.0))
         accent_block.fill.solid()
         accent_block.fill.fore_color.rgb = self.COLOR_ACCENT_BG
         accent_block.line.fill.background()
         accent_block.rotation = 180 
 
-        # 3. Horizontal Tech Divider
         divider_line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.75), Inches(1.5), Inches(8.5), Inches(0.02))
         divider_line.fill.solid()
         divider_line.fill.fore_color.rgb = RGBColor(45, 49, 69) 
         divider_line.line.fill.background()
-
-        # 4. Neon Footer Accent
-        footer_accent = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(9.25), Inches(7.2), Inches(0.75), Inches(0.3))
-        footer_accent.fill.solid()
-        footer_accent.fill.fore_color.rgb = self.COLOR_ACCENT
-        footer_accent.line.fill.background()
 
     def _draw_content_card(self, slide, left, top, width, height):
         card = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
@@ -149,14 +136,52 @@ class LuminaPPTGenerator:
         body_run.font.size = Pt(font_size_pt)
         body_run.font.color.rgb = self.COLOR_TEXT_MAIN
 
+    def _inject_dynamic_progress_tracker(self, slide, current_idx: int, total_slides: int):
+        """
+        Day 24 Core Addition: Progress Indicator & Pagination System.
+        Calculates mathematical ratios to compute real-time progress bar widths,
+        and renders precise '02 / 07' string matrices on presentation corner zones.
+        """
+        if total_slides <= 0:
+            return
+            
+        print(f"🔢 [Pagination Engine]: Processing slide positioning counter indicators: {current_idx} of {total_slides}")
+        
+        # 1. Mathematical Percentage Progress Bar Calculation
+        # Base horizontal track boundary limit matches header divider line metrics = 8.5 Inches wide
+        base_track_width = 8.5
+        calculated_progress_ratio = current_idx / total_slides
+        progress_bar_width = Inches(base_track_width * calculated_progress_ratio)
+        
+        # Injecting structural neon progress indicator line block over bottom layout bound (Top offset = 7.25 Inches)
+        progress_shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.75), Inches(7.25), progress_bar_width, Inches(0.04))
+        progress_shape.fill.solid()
+        progress_shape.fill.fore_color.rgb = self.COLOR_ACCENT # Bright neon purple tracking meter
+        progress_shape.line.fill.background()
+        
+        # 2. Hard-Coding Numeric Fractional Pagination String Box
+        counter_box = slide.shapes.add_textbox(Inches(8.25), Inches(6.8), Inches(1.0), Inches(0.4))
+        tf = counter_box.text_frame
+        tf.word_wrap = True
+        p = tf.paragraphs[0]
+        
+        # Left-padding indices with leading zero variables to structure premium looks ('02 / 07')
+        p.text = f"{str(current_idx).zfill(2)} / {str(total_slides).zfill(2)}"
+        p.font.name = 'Segoe UI Semibold'
+        p.font.size = Pt(11)
+        p.font.color.rgb = self.COLOR_MUTED # Cyber Cyan tracking highlights text color
+        p.alignment = PP_ALIGN.RIGHT
+
     def generate_actual_pptx(self, structured_data: dict, output_filename: str = "presentation.pptx") -> str:
-        print("🛠️ [Visual Architect]: Compiling geometric backdrop shapes into presentation vectors...")
+        print("🛠://[Pagination Architect]: Compiling metric tracking vectors into presentation sheets...")
         prs = Presentation()
         prs.slide_width = Inches(10)
         prs.slide_height = Inches(7.5)
         blank_layout = prs.slide_layouts[6]
 
-        # --- TITLE SLIDE ---
+        # ----------------------------------------------------------------------
+        # TITLE SLIDE ARCHITECTURE
+        # ----------------------------------------------------------------------
         slide = prs.slides.add_slide(blank_layout)
         self._apply_background_with_geometric_accents(slide)
         self._inject_fade_transition(slide)
@@ -174,15 +199,32 @@ class LuminaPPTGenerator:
         p.font.bold = True
         p.font.color.rgb = self.COLOR_ACCENT
 
-        # --- CONTENT SLIDES LOOP ---
-        for slide_data in structured_data.get("slides", []):
+        p2 = tf.add_paragraph()
+        p2.text = f"Asynchronous Pagination & Linear Progress Tracker Sockets\nReal-time Index Multipliers Framework | Total Track Nodes: {structured_data.get('total_slides', 0)}"
+        p2.font.name = 'Segoe UI'
+        p2.font.size = Pt(13)
+        p2.font.color.rgb = self.COLOR_MUTED
+        p2.space_before = Pt(20)
+
+        # ----------------------------------------------------------------------
+        # THREE-ZONE PRESENTATION LOOP WITH AUTOMATED TRACKING HOOKS
+        # ----------------------------------------------------------------------
+        slides_list = structured_data.get("slides", [])
+        total_slides_count = int(structured_data.get("total_slides", len(slides_list)))
+
+        for idx, slide_data in enumerate(slides_list, start=1):
             slide = prs.slides.add_slide(blank_layout)
             self._apply_background_with_geometric_accents(slide)
             self._inject_fade_transition(slide)
 
+            #  Day 24 Core Addition Socket Execution
+            self._inject_dynamic_progress_tracker(slide, current_idx=idx, total_slides=total_slides_count)
+
             slide_title_text = f"{slide_data.get('slide_number')}. {slide_data.get('title')}"
             local_slide_font_size = self._compute_adaptive_font_size(slide_title_text)
-            title_box = slide.shapes.add_textbox(Inches(0.75), Inches(0.5), Inches(8.5), Inches(1.0))
+            title_top_offset = Inches(0.5)
+
+            title_box = slide.shapes.add_textbox(Inches(0.75), title_top_offset, Inches(8.5), Inches(1.0))
             tf_title = title_box.text_frame
             tf_title.word_wrap = True
             p_title = tf_title.paragraphs[0]
@@ -197,28 +239,47 @@ class LuminaPPTGenerator:
             left_points = points[:mid_index]
             right_points = points[mid_index:]
 
-            col_width, img_width = Inches(2.7), Inches(2.6)
+            col_width = Inches(2.7)
+            img_width = Inches(2.6)
+            card_height = Inches(4.8)
             content_top_offset = Inches(1.8)
 
+            # ZONE 1: Context Graphic Placeholder
             img_left_start = Inches(0.75)
-            self._generate_mock_visual_placeholder(slide, img_left_start, content_top_offset, img_width, Inches(4.8), slide_data.get('title'))
+            self._generate_mock_visual_placeholder(
+                slide=slide, left=img_left_start, top=content_top_offset, width=img_width, height=card_height, 
+                placeholder_text=slide_data.get('title', 'Analytics Data Core')
+            )
 
+            # ZONE 2: TEXT CONTENT COLUMN A
             col_left_start = Inches(3.6)
-            self._draw_content_card(slide, col_left_start, content_top_offset, col_width, Inches(4.8))
-            body_box_left = slide.shapes.add_textbox(col_left_start + Inches(0.15), content_top_offset + Inches(0.2), col_width - Inches(0.2), Inches(4.4))
-            for i, pt_text in enumerate(left_points):
-                p_pt = body_box_left.text_frame.paragraphs[0] if i == 0 else body_box_left.text_frame.add_paragraph()
-                self._format_rich_bullet_point(p_pt, pt_text)
+            self._draw_content_card(slide, col_left_start, content_top_offset, col_width, card_height)
+            
+            body_box_left = slide.shapes.add_textbox(col_left_start + Inches(0.15), content_top_offset + Inches(0.2), col_width - Inches(0.2), card_height - Inches(0.4))
+            tf_left = body_box_left.text_frame
+            tf_left.word_wrap = True
 
+            for i, pt_text in enumerate(left_points):
+                p_pt = tf_left.paragraphs[0] if i == 0 else tf_left.add_paragraph()
+                self._format_rich_bullet_point(p_pt, pt_text, font_size_pt=13)
+
+            # ZONE 3: TEXT CONTENT COLUMN B
             col_right_start = Inches(6.55)
-            self._draw_content_card(slide, col_right_start, content_top_offset, col_width, Inches(4.8))
-            body_box_right = slide.shapes.add_textbox(col_right_start + Inches(0.15), content_top_offset + Inches(0.2), col_width - Inches(0.2), Inches(4.4))
+            self._draw_content_card(slide, col_right_start, content_top_offset, col_width, card_height)
+            
+            body_box_right = slide.shapes.add_textbox(col_right_start + Inches(0.15), content_top_offset + Inches(0.2), col_width - Inches(0.2), card_height - Inches(0.4))
+            tf_right = body_box_right.text_frame
+            tf_right.word_wrap = True
+
             for i, pt_text in enumerate(right_points):
-                p_pt = body_box_right.text_frame.paragraphs[0] if i == 0 else body_box_right.text_frame.add_paragraph()
-                self._format_rich_bullet_point(p_pt, pt_text)
+                p_pt = tf_right.paragraphs[0] if i == 0 else tf_right.add_paragraph()
+                self._format_rich_bullet_point(p_pt, pt_text, font_size_pt=13)
 
         output_dir = "output"
-        if not os.path.exists(output_dir): os.makedirs(output_dir)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+            
         final_path = os.path.join(output_dir, output_filename)
         prs.save(final_path)
+        print(f"💾 [Pagination Architect]: Progress-tracked presentations saved successfully at: {final_path}")
         return final_path
