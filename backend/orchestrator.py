@@ -15,10 +15,6 @@ class LuminaOrchestrator:
         self.output_dir = "output"
 
     def execute_storage_garbage_collection(self, retention_limit_seconds: int = 1800):
-        """
-        Day 19 Architectural Addition: Asynchronous Memory & File Garbage Collector.
-        Scans output workspace arrays and flushes historical slide blocks older than the retention threshold.
-        """
         print("🧹 [Garbage Collector]: Scanning storage nodes for legacy execution files...")
         if not os.path.exists(self.output_dir):
             return
@@ -31,7 +27,6 @@ class LuminaOrchestrator:
         for file_path in file_matrix:
             try:
                 file_creation_time = os.path.getmtime(file_path)
-                # Checking if file age matches threshold criteria boundaries
                 if (current_time - file_creation_time) > retention_limit_seconds:
                     os.remove(file_path)
                     print(f"🗑️ [Garbage Collector]: Flushed obsolete block -> {os.path.basename(file_path)}")
@@ -44,14 +39,16 @@ class LuminaOrchestrator:
 
     def route_and_execute_stream(self, user_query: str, target_slides: int = 7, audience_level: str = "Advanced Engineering"):
         """
-        Day 19 Upgrade: Enforces strict post-execution context cleanups and triggers 
-        garbage collection frames proactively on every dynamic intent route.
+        Day 26 Architectural Upgrade: Microsecond Latency Tracking Sockets.
+        Tracks precise code block operational velocity to expose optimization profiles.
         """
-        # Proactively flush old artifact layers from host environment before launching fresh thread parameters
-        self.execute_storage_garbage_collection(retention_limit_seconds=600) # 10 minute threshold bounds
+        # Starting high-precision global pipeline clock reference
+        global_pipeline_start = time.perf_counter()
+        
+        self.execute_storage_garbage_collection(retention_limit_seconds=600)
         
         yield "⏳ [Pipeline Core]: Scanning network packet stream parameters...", None
-        time.sleep(0.4)
+        time.sleep(0.2)
         
         if "summarize" in user_query.lower() or "youtube.com" in user_query.lower():
             intent = "summarize"
@@ -64,42 +61,59 @@ class LuminaOrchestrator:
             target_url = url_match.group(1)
             yield f"🎬 [Pipeline Core]: Intent Identified -> Presentation Builder. Extraction ID active.", None
             
-            # Phase 1: Scraping Validation with Exception Target Mapping
-            yield "📡 [Phase 1/4]: Connecting to remote server streams...", None
+            # --- Phase 1 Speed Analytics Tracking ---
+            p1_start = time.perf_counter()
+            yield "📡 [Phase 1/4]: Connecting to remote server streams and extraction blocks...", None
             result = self.video_engine.fetch_metadata_and_transcript(target_url)
+            p1_latency = time.perf_counter() - p1_start
+            print(f"⏱️  [Performance Profiler]: Phase 1 Transcript Fetch Duration -> {p1_latency:.4f} seconds")
             
             if result["status"] == "failed":
                 raise TranscriptExtractionError(result["error_message"])
             
-            # Phase 2: Generating Text Summary Blocks
-            yield f"🤖 [Phase 2/4]: Extract Success for target frames. Launching core text summary compilation...", None
+            # --- Phase 2 Speed Analytics Tracking ---
+            p2_start = time.perf_counter()
+            yield f"🤖 [Phase 2/4]: Extract Success. Launching AI core text summary compilation...", None
             summary_output = self.summarizer.generate_summary(result["title"], result["transcript"])
+            p2_latency = time.perf_counter() - p2_start
+            print(f"⏱️  [Performance Profiler]: Phase 2 AI Core Generation Duration -> {p2_latency:.4f} seconds")
             
-            # Phase 3: Structural JSON Payload Mapping
-            yield f"📊 [Phase 3/4]: Structuring presentation configurations matching constraints layer...", None
+            # --- Phase 3 Speed Analytics Tracking ---
+            p3_start = time.perf_counter()
+            yield f"📊 [Phase 3/4]: Structuring presentation schema configurations via Gemini...", None
             ppt_result = self.ppt_generator.transform_summary_to_slides(
                 video_title=result["title"], 
                 summary_text=summary_output, 
                 target_slides=target_slides, 
                 audience_level=audience_level
             )
+            p3_latency = time.perf_counter() - p3_start
+            print(f"⏱️  [Performance Profiler]: Phase 3 Structural Schema Load Duration -> {p3_latency:.4f} seconds")
             
             if ppt_result["status"] == "failed":
                 raise SchemaValidationException(ppt_result["error"])
             
-            # Phase 4: Final File Assembly Logic
-            yield "💾 [Phase 4/4]: Compiling binary blocks into PowerPoint elements...", None
+            # --- Phase 4 Speed Analytics Tracking ---
+            p4_start = time.perf_counter()
+            yield "💾 [Phase 4/4]: Compiling binary blocks into PowerPoint layers...", None
             
-            # Appending system timestamp metrics to separate storage file references
             timestamp_token = int(time.time())
             custom_filename = f"Lumina_Presentation_{timestamp_token}.pptx"
             file_path = self.ppt_generator.generate_actual_pptx(ppt_result["data"], custom_filename)
+            p4_latency = time.perf_counter() - p4_start
+            print(f"⏱️  [Performance Profiler]: Phase 4 PPTX Binary Compilation Duration -> {p4_latency:.4f} seconds")
+            
+            # End total global benchmarking stream
+            total_elapsed_time = time.perf_counter() - global_pipeline_start
+            print(f"🏎️  [Performance Profiler]: TOTAL COMPILATION PIPELINE TIME -> {total_elapsed_time:.4f} seconds")
             
             success_status = (
-                f"🎉 **Compilation Complete! System Active.**\n\n"
+                f"🎉 **Compilation Complete! Speed Tuned Engine Active.**\n\n"
+                f"⏱️ **Performance Metrics:** Total Pipeline Process in **{total_elapsed_time:.2f}s**\n"
+                f"📡 Phase 1 (Scraper): {p1_latency:.2f}s | 🤖 Phase 2 (Summary): {p2_latency:.2f}s\n"
+                f"📊 Phase 3 (Schema): {p3_latency:.2f}s | 💾 Phase 4 (Binary Build): {p4_latency:.2f}s\n\n"
                 f"🎬 **Video Context Title:** {result['title']}\n"
-                f"📊 **Layout Target Enforced:** Exactly {target_slides} Content Nodes Generated.\n"
-                f"💾 **Storage Vector Link:** File locked cleanly down into output folder context frames."
+                f"💾 **Storage Vector Link:** File optimized and locked down into workspace frames."
             )
             yield success_status, file_path
             return
