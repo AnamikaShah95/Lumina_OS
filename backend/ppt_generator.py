@@ -28,7 +28,7 @@ class LuminaPPTGenerator:
         self.COLOR_MUTED = RGBColor(139, 233, 253)     # Cyber Cyan Core Accent
 
     def transform_summary_to_slides(self, video_title: str, summary_text: str, target_slides: int, audience_level: str) -> dict:
-        print(f"📊 [PPT Engine]: Instructing structural payload transformations via Gemini schemas...")
+        print(f"📊 [PPT Engine]: Transforming video parameters inside multi-layer structured pipelines...")
         prompt = f"""
         You are an expert Enterprise AI Slide Architect. Parse the input summaries and structure it into a clean JSON schema payload matching the exact shape.
 
@@ -70,10 +70,8 @@ class LuminaPPTGenerator:
         accent_block.line.fill.background()
         accent_block.rotation = 180 
 
-        divider_line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.75), Inches(1.5), Inches(8.5), Inches(0.02))
-        divider_line.fill.solid()
-        divider_line.fill.fore_color.rgb = RGBColor(45, 49, 69) 
-        divider_line.line.fill.background()
+        # Day 25 Structural Move: Removed old static line divider from here 
+        # to prevent lines cutting down middle of text wraps during multi-line headers.
 
     def _draw_content_card(self, slide, left, top, width, height):
         card = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
@@ -137,43 +135,26 @@ class LuminaPPTGenerator:
         body_run.font.color.rgb = self.COLOR_TEXT_MAIN
 
     def _inject_dynamic_progress_tracker(self, slide, current_idx: int, total_slides: int):
-        """
-        Day 24 Core Addition: Progress Indicator & Pagination System.
-        Calculates mathematical ratios to compute real-time progress bar widths,
-        and renders precise '02 / 07' string matrices on presentation corner zones.
-        """
-        if total_slides <= 0:
-            return
-            
-        print(f"🔢 [Pagination Engine]: Processing slide positioning counter indicators: {current_idx} of {total_slides}")
-        
-        # 1. Mathematical Percentage Progress Bar Calculation
-        # Base horizontal track boundary limit matches header divider line metrics = 8.5 Inches wide
+        if total_slides <= 0: return
         base_track_width = 8.5
         calculated_progress_ratio = current_idx / total_slides
         progress_bar_width = Inches(base_track_width * calculated_progress_ratio)
         
-        # Injecting structural neon progress indicator line block over bottom layout bound (Top offset = 7.25 Inches)
         progress_shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.75), Inches(7.25), progress_bar_width, Inches(0.04))
         progress_shape.fill.solid()
-        progress_shape.fill.fore_color.rgb = self.COLOR_ACCENT # Bright neon purple tracking meter
+        progress_shape.fill.fore_color.rgb = self.COLOR_ACCENT 
         progress_shape.line.fill.background()
         
-        # 2. Hard-Coding Numeric Fractional Pagination String Box
         counter_box = slide.shapes.add_textbox(Inches(8.25), Inches(6.8), Inches(1.0), Inches(0.4))
-        tf = counter_box.text_frame
-        tf.word_wrap = True
-        p = tf.paragraphs[0]
-        
-        # Left-padding indices with leading zero variables to structure premium looks ('02 / 07')
+        p = counter_box.text_frame.paragraphs[0]
         p.text = f"{str(current_idx).zfill(2)} / {str(total_slides).zfill(2)}"
         p.font.name = 'Segoe UI Semibold'
         p.font.size = Pt(11)
-        p.font.color.rgb = self.COLOR_MUTED # Cyber Cyan tracking highlights text color
+        p.font.color.rgb = self.COLOR_MUTED 
         p.alignment = PP_ALIGN.RIGHT
 
     def generate_actual_pptx(self, structured_data: dict, output_filename: str = "presentation.pptx") -> str:
-        print("🛠://[Pagination Architect]: Compiling metric tracking vectors into presentation sheets...")
+        print("🛠️ [Safety Wrap Architect]: Compiling context-aware auto-wrapping header bounds...")
         prs = Presentation()
         prs.slide_width = Inches(10)
         prs.slide_height = Inches(7.5)
@@ -200,14 +181,14 @@ class LuminaPPTGenerator:
         p.font.color.rgb = self.COLOR_ACCENT
 
         p2 = tf.add_paragraph()
-        p2.text = f"Asynchronous Pagination & Linear Progress Tracker Sockets\nReal-time Index Multipliers Framework | Total Track Nodes: {structured_data.get('total_slides', 0)}"
+        p2.text = f"Automated Header Bounding Box Optimization Pipeline\nDynamic Spatial Offset Matrix Layers | Nodes Count: {structured_data.get('total_slides', 0)}"
         p2.font.name = 'Segoe UI'
         p2.font.size = Pt(13)
         p2.font.color.rgb = self.COLOR_MUTED
         p2.space_before = Pt(20)
 
         # ----------------------------------------------------------------------
-        # THREE-ZONE PRESENTATION LOOP WITH AUTOMATED TRACKING HOOKS
+        # THREE-ZONE SLIDES PACK WITH SAFETY HEIGHT ADAPTIVE LAYOUTS
         # ----------------------------------------------------------------------
         slides_list = structured_data.get("slides", [])
         total_slides_count = int(structured_data.get("total_slides", len(slides_list)))
@@ -216,24 +197,45 @@ class LuminaPPTGenerator:
             slide = prs.slides.add_slide(blank_layout)
             self._apply_background_with_geometric_accents(slide)
             self._inject_fade_transition(slide)
-
-            #  Day 24 Core Addition Socket Execution
             self._inject_dynamic_progress_tracker(slide, current_idx=idx, total_slides=total_slides_count)
 
             slide_title_text = f"{slide_data.get('slide_number')}. {slide_data.get('title')}"
-            local_slide_font_size = self._compute_adaptive_font_size(slide_title_text)
-            title_top_offset = Inches(0.5)
+            header_chars_count = len(slide_title_text)
 
-            title_box = slide.shapes.add_textbox(Inches(0.75), title_top_offset, Inches(8.5), Inches(1.0))
+            # --- Day 25 Mathematical Spatial Optimization Calculations ---
+            # Automatically adjusting height bounds and layout shifts matching title string volumes
+            if header_chars_count <= 45:
+                # Standard short header title configuration bounds
+                title_allocated_height = Inches(0.8)
+                content_top_offset = Inches(1.6)
+                card_rendering_height = Inches(5.0)
+                font_pt_size = 24
+            else:
+                # Complex multi-line long header wrap state configuration bounds
+                title_allocated_height = Inches(1.4)
+                content_top_offset = Inches(2.2)       # Pushing the blocks layout down by 0.6 inches
+                card_rendering_height = Inches(4.4)    # Compacting card height limits safely to save padding
+                font_pt_size = 20                       # Slicing scale dimensions to balance wrap tracks
+
+            # Render the wrap-enabled adaptive title box
+            title_box = slide.shapes.add_textbox(Inches(0.75), Inches(0.4), Inches(8.5), title_allocated_height)
             tf_title = title_box.text_frame
             tf_title.word_wrap = True
             p_title = tf_title.paragraphs[0]
             p_title.text = slide_title_text
             p_title.font.name = 'Segoe UI'
-            p_title.font.size = Pt(min(local_slide_font_size, 26))
+            p_title.font.size = Pt(font_pt_size)
             p_title.font.bold = True
             p_title.font.color.rgb = self.COLOR_ACCENT
 
+            # Adaptive Dynamic Tech Divider Track Line (Injected dynamically directly below wrap boundaries)
+            line_top_position = Inches(0.4) + title_allocated_height + Inches(0.1)
+            divider_line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.75), line_top_position, Inches(8.5), Inches(0.02))
+            divider_line.fill.solid()
+            divider_line.fill.fore_color.rgb = RGBColor(45, 49, 69)
+            divider_line.line.fill.background()
+
+            # Core column track geometry distributions
             points = slide_data.get("bullet_points", [])
             mid_index = (len(points) + 1) // 2
             left_points = points[:mid_index]
@@ -241,21 +243,19 @@ class LuminaPPTGenerator:
 
             col_width = Inches(2.7)
             img_width = Inches(2.6)
-            card_height = Inches(4.8)
-            content_top_offset = Inches(1.8)
 
-            # ZONE 1: Context Graphic Placeholder
+            # ZONE 1: Context Graphic Placeholder (Height and top offset adapts dynamically)
             img_left_start = Inches(0.75)
             self._generate_mock_visual_placeholder(
-                slide=slide, left=img_left_start, top=content_top_offset, width=img_width, height=card_height, 
+                slide=slide, left=img_left_start, top=content_top_offset, width=img_width, height=card_rendering_height, 
                 placeholder_text=slide_data.get('title', 'Analytics Data Core')
             )
 
-            # ZONE 2: TEXT CONTENT COLUMN A
+            # ZONE 2: TEXT CONTENT COLUMN A (Middle Track)
             col_left_start = Inches(3.6)
-            self._draw_content_card(slide, col_left_start, content_top_offset, col_width, card_height)
+            self._draw_content_card(slide, col_left_start, content_top_offset, col_width, card_rendering_height)
             
-            body_box_left = slide.shapes.add_textbox(col_left_start + Inches(0.15), content_top_offset + Inches(0.2), col_width - Inches(0.2), card_height - Inches(0.4))
+            body_box_left = slide.shapes.add_textbox(col_left_start + Inches(0.15), content_top_offset + Inches(0.15), col_width - Inches(0.2), card_rendering_height - Inches(0.3))
             tf_left = body_box_left.text_frame
             tf_left.word_wrap = True
 
@@ -263,11 +263,11 @@ class LuminaPPTGenerator:
                 p_pt = tf_left.paragraphs[0] if i == 0 else tf_left.add_paragraph()
                 self._format_rich_bullet_point(p_pt, pt_text, font_size_pt=13)
 
-            # ZONE 3: TEXT CONTENT COLUMN B
+            # ZONE 3: TEXT CONTENT COLUMN B (Right Margin Track)
             col_right_start = Inches(6.55)
-            self._draw_content_card(slide, col_right_start, content_top_offset, col_width, card_height)
+            self._draw_content_card(slide, col_right_start, content_top_offset, col_width, card_rendering_height)
             
-            body_box_right = slide.shapes.add_textbox(col_right_start + Inches(0.15), content_top_offset + Inches(0.2), col_width - Inches(0.2), card_height - Inches(0.4))
+            body_box_right = slide.shapes.add_textbox(col_right_start + Inches(0.15), content_top_offset + Inches(0.15), col_width - Inches(0.2), card_rendering_height - Inches(0.3))
             tf_right = body_box_right.text_frame
             tf_right.word_wrap = True
 
@@ -281,5 +281,5 @@ class LuminaPPTGenerator:
             
         final_path = os.path.join(output_dir, output_filename)
         prs.save(final_path)
-        print(f"💾 [Pagination Architect]: Progress-tracked presentations saved successfully at: {final_path}")
+        print(f"💾 [Safety Wrap Architect]: Adaptive header optimized presentations compiled cleanly at: {final_path}")
         return final_path
