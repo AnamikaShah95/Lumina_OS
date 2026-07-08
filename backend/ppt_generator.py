@@ -1,6 +1,7 @@
 import json
 import os
 import time
+import gc  # Day 28 System Level Core Python Garbage Collection Interface
 from google import genai
 from pptx import Presentation
 from pptx.util import Inches, Pt
@@ -20,12 +21,12 @@ class LuminaPPTGenerator:
         self.model_name = 'gemini-2.5-flash'
 
         # Premium Corporate Design Tokens Palette
-        self.COLOR_BG = RGBColor(20, 21, 30)           # Shadow Eclipse Navy
-        self.COLOR_ACCENT_BG = RGBColor(28, 30, 43)    # Subtle Accent Backdrop Mesh
-        self.COLOR_CARD_BG = RGBColor(35, 38, 55)      # Glassmorphism Card Fill
-        self.COLOR_TEXT_MAIN = RGBColor(248, 248, 242) # Pearl White Core
-        self.COLOR_ACCENT = RGBColor(189, 147, 249)    # Neon Kawaii Purple
-        self.COLOR_MUTED = RGBColor(139, 233, 253)     # Cyber Cyan Core Accent
+        self.COLOR_BG = RGBColor(20, 21, 30)           
+        self.COLOR_ACCENT_BG = RGBColor(28, 30, 43)    
+        self.COLOR_CARD_BG = RGBColor(35, 38, 55)      
+        self.COLOR_TEXT_MAIN = RGBColor(248, 248, 242) 
+        self.COLOR_ACCENT = RGBColor(189, 147, 249)    
+        self.COLOR_MUTED = RGBColor(139, 233, 253)     
 
     def transform_summary_to_slides(self, video_title: str, summary_text: str, target_slides: int, audience_level: str) -> dict:
         print(f"📊 [PPT Engine]: Transforming video parameters inside multi-layer structured pipelines...")
@@ -69,9 +70,6 @@ class LuminaPPTGenerator:
         accent_block.fill.fore_color.rgb = self.COLOR_ACCENT_BG
         accent_block.line.fill.background()
         accent_block.rotation = 180 
-
-        # Day 25 Structural Move: Removed old static line divider from here 
-        # to prevent lines cutting down middle of text wraps during multi-line headers.
 
     def _draw_content_card(self, slide, left, top, width, height):
         card = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
@@ -154,7 +152,7 @@ class LuminaPPTGenerator:
         p.alignment = PP_ALIGN.RIGHT
 
     def generate_actual_pptx(self, structured_data: dict, output_filename: str = "presentation.pptx") -> str:
-        print("🛠️ [Safety Wrap Architect]: Compiling context-aware auto-wrapping header bounds...")
+        print("🛠️ [Memory Audit Architect]: Initializing slide collection vectors...")
         prs = Presentation()
         prs.slide_width = Inches(10)
         prs.slide_height = Inches(7.5)
@@ -180,15 +178,8 @@ class LuminaPPTGenerator:
         p.font.bold = True
         p.font.color.rgb = self.COLOR_ACCENT
 
-        p2 = tf.add_paragraph()
-        p2.text = f"Automated Header Bounding Box Optimization Pipeline\nDynamic Spatial Offset Matrix Layers | Nodes Count: {structured_data.get('total_slides', 0)}"
-        p2.font.name = 'Segoe UI'
-        p2.font.size = Pt(13)
-        p2.font.color.rgb = self.COLOR_MUTED
-        p2.space_before = Pt(20)
-
         # ----------------------------------------------------------------------
-        # THREE-ZONE SLIDES PACK WITH SAFETY HEIGHT ADAPTIVE LAYOUTS
+        # THREE-ZONE SLIDES PACK WITH PERFORMANCE ALLOCATIONS
         # ----------------------------------------------------------------------
         slides_list = structured_data.get("slides", [])
         total_slides_count = int(structured_data.get("total_slides", len(slides_list)))
@@ -202,22 +193,17 @@ class LuminaPPTGenerator:
             slide_title_text = f"{slide_data.get('slide_number')}. {slide_data.get('title')}"
             header_chars_count = len(slide_title_text)
 
-            # --- Day 25 Mathematical Spatial Optimization Calculations ---
-            # Automatically adjusting height bounds and layout shifts matching title string volumes
             if header_chars_count <= 45:
-                # Standard short header title configuration bounds
                 title_allocated_height = Inches(0.8)
                 content_top_offset = Inches(1.6)
                 card_rendering_height = Inches(5.0)
                 font_pt_size = 24
             else:
-                # Complex multi-line long header wrap state configuration bounds
                 title_allocated_height = Inches(1.4)
-                content_top_offset = Inches(2.2)       # Pushing the blocks layout down by 0.6 inches
-                card_rendering_height = Inches(4.4)    # Compacting card height limits safely to save padding
-                font_pt_size = 20                       # Slicing scale dimensions to balance wrap tracks
+                content_top_offset = Inches(2.2)       
+                card_rendering_height = Inches(4.4)    
+                font_pt_size = 20                       
 
-            # Render the wrap-enabled adaptive title box
             title_box = slide.shapes.add_textbox(Inches(0.75), Inches(0.4), Inches(8.5), title_allocated_height)
             tf_title = title_box.text_frame
             tf_title.word_wrap = True
@@ -228,14 +214,12 @@ class LuminaPPTGenerator:
             p_title.font.bold = True
             p_title.font.color.rgb = self.COLOR_ACCENT
 
-            # Adaptive Dynamic Tech Divider Track Line (Injected dynamically directly below wrap boundaries)
             line_top_position = Inches(0.4) + title_allocated_height + Inches(0.1)
             divider_line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.75), line_top_position, Inches(8.5), Inches(0.02))
             divider_line.fill.solid()
             divider_line.fill.fore_color.rgb = RGBColor(45, 49, 69)
             divider_line.line.fill.background()
 
-            # Core column track geometry distributions
             points = slide_data.get("bullet_points", [])
             mid_index = (len(points) + 1) // 2
             left_points = points[:mid_index]
@@ -244,33 +228,29 @@ class LuminaPPTGenerator:
             col_width = Inches(2.7)
             img_width = Inches(2.6)
 
-            # ZONE 1: Context Graphic Placeholder (Height and top offset adapts dynamically)
+            # ZONE 1: Context Graphic Placeholder
             img_left_start = Inches(0.75)
             self._generate_mock_visual_placeholder(
                 slide=slide, left=img_left_start, top=content_top_offset, width=img_width, height=card_rendering_height, 
                 placeholder_text=slide_data.get('title', 'Analytics Data Core')
             )
 
-            # ZONE 2: TEXT CONTENT COLUMN A (Middle Track)
+            # ZONE 2: TEXT CONTENT COLUMN A
             col_left_start = Inches(3.6)
             self._draw_content_card(slide, col_left_start, content_top_offset, col_width, card_rendering_height)
-            
             body_box_left = slide.shapes.add_textbox(col_left_start + Inches(0.15), content_top_offset + Inches(0.15), col_width - Inches(0.2), card_rendering_height - Inches(0.3))
             tf_left = body_box_left.text_frame
             tf_left.word_wrap = True
-
             for i, pt_text in enumerate(left_points):
                 p_pt = tf_left.paragraphs[0] if i == 0 else tf_left.add_paragraph()
                 self._format_rich_bullet_point(p_pt, pt_text, font_size_pt=13)
 
-            # ZONE 3: TEXT CONTENT COLUMN B (Right Margin Track)
+            # ZONE 3: TEXT CONTENT COLUMN B
             col_right_start = Inches(6.55)
             self._draw_content_card(slide, col_right_start, content_top_offset, col_width, card_rendering_height)
-            
             body_box_right = slide.shapes.add_textbox(col_right_start + Inches(0.15), content_top_offset + Inches(0.15), col_width - Inches(0.2), card_rendering_height - Inches(0.3))
             tf_right = body_box_right.text_frame
             tf_right.word_wrap = True
-
             for i, pt_text in enumerate(right_points):
                 p_pt = tf_right.paragraphs[0] if i == 0 else tf_right.add_paragraph()
                 self._format_rich_bullet_point(p_pt, pt_text, font_size_pt=13)
@@ -281,5 +261,25 @@ class LuminaPPTGenerator:
             
         final_path = os.path.join(output_dir, output_filename)
         prs.save(final_path)
-        print(f"💾 [Safety Wrap Architect]: Adaptive header optimized presentations compiled cleanly at: {final_path}")
+        
+        # ----------------------------------------------------------------------
+        # Day 28 Core Addition: Deep Element Tree Pruning & Memory Release
+        # ----------------------------------------------------------------------
+        print("🧹 [Memory Audit Engine]: Pruning XML tree cached reference blocks...")
+        
+        # Explicitly tracking internal python-pptx structures to decouple parent-child dependencies
+        try:
+            for s in prs.slides:
+                # Clearing underlying OpenXML DOM nodes configurations inside shape trees
+                s.shapes._spTree.clear() 
+                del s.element
+            del prs.slides
+            del prs
+        except Exception as prune_err:
+            print(f"⚠️ [Memory Audit Warning]: Dynamic cross-reference release skipped: {str(prune_err)}")
+
+        # Forcing manual cyclic garbage collection invocation to instantly clear dangling memory blocks
+        unreachable_objects_count = gc.collect()
+        print(f"✅ [Memory Audit Engine]: RAM Leak Prevention complete. Cleaned {unreachable_objects_count} unreachable cyclic nodes references.")
+        
         return final_path
