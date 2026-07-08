@@ -1,3 +1,6 @@
-python-dotenv==1.0.1
-google-generativeai==0.8.3
-openai==1.56.0
+google-genai>=0.1.1
+python-pptx>=0.6.21
+gradio>=4.16.0
+python-dotenv>=1.0.0
+uvicorn>=0.22.0
+starlette>=0.27.0
