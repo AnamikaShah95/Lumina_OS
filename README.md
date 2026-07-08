@@ -9,189 +9,347 @@ app_file: app.py
 pinned: false
 ---
 
-# 🔮 Lumina Video Architect - OS Frontend Core v2.3 (Toast Engine)
+<div align="center">
 
-**Transform video data streams into custom, automated PowerPoint presentations with fine-tuned user controls, high-intensity inline parsing, and zero-leak thread management.**
+<img src="https://img.shields.io/badge/-%20-6C3EDB?style=for-the-badge" height="6" width="820"/>
+
+# 🔮 &nbsp;L U M I N A&nbsp; V I D E O &nbsp;A R C H I T E C T
+### `OS Frontend Core v2.3` · *Toast Engine*
+
+<img src="https://img.shields.io/badge/-%20-6C3EDB?style=for-the-badge" height="6" width="820"/>
+
+<br>
+
+**Transform video data streams into custom, automated PowerPoint presentations —**
+*fine-tuned user controls, high-intensity inline parsing, zero-leak thread management.*
+
+<br>
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](.)
+[![Gradio](https://img.shields.io/badge/Gradio-4.16.0-FF7C00?style=for-the-badge&logo=gradio&logoColor=white)](.)
+[![python--pptx](https://img.shields.io/badge/python--pptx-Compiler-B4009E?style=for-the-badge)](.)
+[![Status](https://img.shields.io/badge/Status-Production-2ECC71?style=for-the-badge)](.)
+[![License](https://img.shields.io/badge/License-MIT-9B59B6?style=for-the-badge)](.)
+
+<br>
+
+<sub>🧵 THREAD-SAFE &nbsp;·&nbsp; 🧹 ZERO-LEAK &nbsp;·&nbsp; 🛡️ SECRET-MASKED &nbsp;·&nbsp; ⚡ 44.84s AVG COMPILE &nbsp;·&nbsp; 🗂️ 7-SLIDE MATRIX</sub>
+
+</div>
+
+<br>
+
+<table align="center" width="100%">
+<tr>
+<td align="center" width="25%">
+
+### 🧵
+**Thread-Safe**
+`ThreadPoolExecutor(4)`
+
+</td>
+<td align="center" width="25%">
+
+### 🧹
+**Zero-Leak**
+`OXML Tree Pruning`
+
+</td>
+<td align="center" width="25%">
+
+### 🛡️
+**Secret Masking**
+`Log Interceptor`
+
+</td>
+<td align="center" width="25%">
+
+### ⚡
+**Fast Compile**
+`44.84s avg.`
+
+</td>
+</tr>
+</table>
+
+<br>
+
+<div align="center">
+
+### 🗺️ Compilation Pipeline
+
+```mermaid
+flowchart LR
+    A[🎬 Video URL Input] --> B[📥 Fetch Layer]
+    B --> C[🧠 AI Summary Engine]
+    C --> D[📐 Schema Builder]
+    D --> E[🧩 Slide Assembly]
+    E --> F[🧹 OXML Prune + gc.collect]
+    F --> G([📦 .pptx Artifact])
+
+    style A fill:#6C3EDB,stroke:#fff,color:#fff
+    style G fill:#2ECC71,stroke:#fff,color:#fff
+```
+
+</div>
+
+---
+
+## 📑 Table of Contents
+
+<div align="center">
+
+📸 [Workspace Preview](#-production-workspace-preview) &nbsp;•&nbsp;
+⚙️ [Engineering Pillars](#️-system-core-engineering-pillars) &nbsp;•&nbsp;
+📊 [Output Showcase](#-sample-output-showcase) &nbsp;•&nbsp;
+📂 [Slide Payload](#-generated-presentation-payload--7-slide-corporate-matrix) &nbsp;•&nbsp;
+🚀 [Quick Start](#-local-runtime-initialization)
+
+</div>
 
 ---
 
 ## 📸 Production Workspace Preview
 
+<div align="center">
+
 ![Lumina OS UI Interface Desktop View](image_1e64ba.png)
 
-The production workspace centers on three primary controls that drive the compilation pipeline:
+*Live desktop capture — request submitted, engine triggered, artifact compiled.*
 
-- **Target Slide Count Slider** — lets the user dial the output deck between 3 and 15 slides, directly shaping how aggressively the summarization stage compresses source content.
-- **Audience Depth Dropdown** — sets the tone and technical density of generated bullets (e.g. *Advanced Engineering*), so the same source video can be turned into a beginner overview or a specialist briefing.
-- **Async Stream Terminal** — surfaces real-time pipeline telemetry (fetch → summarize → schema → assemble) as the request is processed, giving the user visibility into long-running jobs without blocking the UI thread.
+</div>
 
-Together, these controls feed a single `Trigger Lumina Engine` action that kicks off the backend compilation job and returns a downloadable `.pptx` artifact on completion.
+<table>
+<tr>
+<td width="33%" valign="top">
+
+### 🎚️ Target Slide Count
+Slider-driven range (**3–15**) that governs how aggressively the summarizer compresses source content into deck length.
+
+</td>
+<td width="33%" valign="top">
+
+### 🧠 Audience Depth
+Dropdown control (e.g. *Advanced Engineering*) that reshapes tone and technical density of every generated bullet.
+
+</td>
+<td width="33%" valign="top">
+
+### 📟 Async Stream Terminal
+Live pipeline telemetry — fetch → summarize → schema → assemble — streamed without blocking the UI thread.
+
+</td>
+</tr>
+</table>
+
+A single **`🚀 Trigger Lumina Engine`** action fires the backend compile job and returns a downloadable `.pptx` artifact on completion.
 
 ---
 
 ## ⚙️ System Core Engineering Pillars
 
-Three backend optimizations underpin the compiler's stability and performance:
+<table>
+<tr>
+<td width="34" align="center">🧵</td>
+<td>
 
 **Decoupled Task Offloading**
-A persistent `ThreadPoolExecutor(max_workers=4)` isolates heavy binary processing (video fetch, transcript parsing, slide assembly) away from the client-facing event loop, keeping the UI fluid and responsive while compilation runs in the background.
+A persistent `ThreadPoolExecutor(max_workers=4)` isolates heavy binary processing — video fetch, transcript parsing, slide assembly — away from the client-facing event loop, keeping the UI fluid while compilation runs in the background.
+
+</td>
+</tr>
+<tr>
+<td align="center">🧹</td>
+<td>
 
 **Memory Leak Auditing & OXML Tree Pruning**
-On completion of each compile job, sub-level OpenXML elements are explicitly cleared via `shapes._spTree.clear()`, followed by a manual `gc.collect()` cycle to deallocate unreachable cyclic node references left behind by `python-pptx` object graphs.
+On job completion, sub-level OpenXML elements are explicitly cleared via `shapes._spTree.clear()`, followed by a manual `gc.collect()` cycle to deallocate unreachable cyclic node references left behind by `python-pptx` object graphs.
+
+</td>
+</tr>
+<tr>
+<td align="center">🛡️</td>
+<td>
 
 **Secure Sandbox Log Masking**
-A transparent `sys.stdout` interceptor, wrapped around structured regular expressions, filters real-time telemetry logs and replaces any live credentials with `[SECURE_MASK_LOCKED]` before they ever reach the terminal or log file.
+A transparent `sys.stdout` interceptor, wrapped around structured regular expressions, filters real-time telemetry logs and replaces any live credentials with `[SECURE_MASK_LOCKED]` before they reach the terminal or log file.
+
+</td>
+</tr>
+</table>
 
 ---
 
 ## 📊 Sample Output Showcase
 
-A recent production run compiling a TED talk into a corporate-style slide deck:
+<div align="center">
+
+### 🎬 Production Run — "How to Make Stress Your Friend"
 
 | Field | Value |
-|---|---|
-| **Input Query URL** | `https://youtu.be/RcGyVTAoXEU?si=k-CCWgQUd7yQ-FZy` |
-| **Context Topic** | How to Make Stress Your Friend (TED Session Analysis) |
-| **Execution Mode** | Generative AI Fallback Engine *(upstream scraper firewall restrictions)* |
-| **Total Process Time** | 44.84 seconds |
-| **Cyclic Memory Nodes Flushed** | 15,967 unreachable references |
+|:--|:--|
+| 🔗 **Input Query URL** | `youtu.be/RcGyVTAoXEU` |
+| 🧭 **Context Topic** | How to Make Stress Your Friend *(TED Session Analysis)* |
+| ⚙️ **Execution Mode** | Generative AI Fallback Engine *(upstream scraper firewall restrictions)* |
+| ⏱️ **Total Process Time** | **44.84 seconds** |
+| ♻️ **Cyclic Memory Nodes Flushed** | **15,967** unreachable references |
 
-**Performance Profiler — Phase Latency**
+</div>
 
-```
-Phase 1  Fetch      25.12s
-Phase 2  Summary    10.10s
-Phase 3  Schema      9.40s
-Phase 4  Assembly    0.20s
-─────────────────────────────
-Total                44.84s
-```
+<div align="center">
+
+**⏳ Performance Profiler — Phase Latency**
+
+| Phase | Task | Duration | |
+|:--|:--|:--:|:--|
+| 1 | Fetch | `25.12s` | ████████████████████████░░░░░░░░░░░░░░ 56% |
+| 2 | Summary | `10.10s` | ██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 23% |
+| 3 | Schema | `9.40s` | █████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 21% |
+| 4 | Assembly | `0.20s` | ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ <1% |
+| **Σ** | **Total** | **`44.84s`** | **100%** |
+
+</div>
 
 ---
 
 ## 📂 Generated Presentation Payload — 7-Slide Corporate Matrix
 
-Each slide follows a **Three-Zone Layout Alignment Grid**: Zone 1 (visual context), Zone 2 (Column A focus), Zone 3 (Column B focus).
+Each slide follows a **Three-Zone Layout Alignment Grid**: Zone 1 (visual context) · Zone 2 (Column A) · Zone 3 (Column B).
 
 <details>
-<summary><strong>Slide 01 — Executive Overview: Reframing Stress</strong></summary>
+<summary>🟣 <strong>Slide 01 — Executive Overview: Reframing Stress</strong></summary>
+<br>
 
-**Zone 1:** EXECUTIVE OVERVIEW: REFRAMING STRESS
+> **Zone 1 —** `EXECUTIVE OVERVIEW: REFRAMING STRESS`
 
-**Zone 2**
-- Stress is often misperceived as purely negative, hindering growth and connection.
-- Scientific analysis redefines stress as a potential catalyst for positive outcomes.
+| Zone 2 | Zone 3 |
+|:--|:--|
+| Stress is often misperceived as purely negative, hindering growth and connection. | Strategic shift from stress avoidance to leveraging its biological responses. |
+| Scientific analysis redefines stress as a potential catalyst for positive outcomes. | Cognitive reframing and active social engagement are key to harnessing stress. |
 
-**Zone 3**
-- Strategic shift from stress avoidance to leveraging its biological responses.
-- Cognitive reframing and active social engagement are key to harnessing stress.
 </details>
 
 <details>
-<summary><strong>Slide 02 — Core Pillars of Stress Transformation</strong></summary>
+<summary>🟣 <strong>Slide 02 — Core Pillars of Stress Transformation</strong></summary>
+<br>
 
-**Zone 1:** CORE PILLARS OF STRESS TRANSFORMATION
+> **Zone 1 —** `CORE PILLARS OF STRESS TRANSFORMATION`
 
-**Zone 2**
-- This section outlines fundamental concepts for understanding and managing stress effectively.
-- Focus on stress reframe, cognitive appraisal, psychological resilience, and oxytocin dynamics.
+| Zone 2 | Zone 3 |
+|:--|:--|
+| This section outlines fundamental concepts for understanding and managing stress effectively. | Highlights the critical role of human connection in stress mitigation and thriving. |
+| Focus on stress reframe, cognitive appraisal, psychological resilience, and oxytocin dynamics. | Provides a structured approach to leveraging stress for personal and collective benefit. |
 
-**Zone 3**
-- Highlights the critical role of human connection in stress mitigation and thriving.
-- Provides a structured approach to leveraging stress for personal and collective benefit.
 </details>
 
 <details>
-<summary><strong>Slide 03 — Stress Reframe: Challenge vs. Threat Response</strong></summary>
+<summary>🟣 <strong>Slide 03 — Stress Reframe: Challenge vs. Threat Response</strong></summary>
+<br>
 
-**Zone 1:** STRESS REFRAME: CHALLENGE VS. THREAT RESPONSE
+> **Zone 1 —** `STRESS REFRAME: CHALLENGE VS. THREAT RESPONSE`
 
-**Zone 2**
-- View stress not as debilitating, but as the body's natural physiological response to challenge.
-- Shift from outright stress elimination to consciously utilizing adaptive responses.
+| Zone 2 | Zone 3 |
+|:--|:--|
+| View stress not as debilitating, but as the body's natural physiological response to challenge. | Promote a 'challenge response' for increased cardiovascular efficiency and enhanced focus. |
+| Shift from outright stress elimination to consciously utilizing adaptive responses. | Avoid the 'threat response' characterized by fear and physiological constriction for better performance. |
 
-**Zone 3**
-- Promote a 'challenge response' for increased cardiovascular efficiency and enhanced focus.
-- Avoid the 'threat response' characterized by fear and physiological constriction for better performance.
 </details>
 
 <details>
-<summary><strong>Slide 04 — Cognitive Appraisal Theory: Interpreting Stressors</strong></summary>
+<summary>🟣 <strong>Slide 04 — Cognitive Appraisal Theory: Interpreting Stressors</strong></summary>
+<br>
 
-**Zone 1:** COGNITIVE APPRAISAL THEORY: INTERPRETING STRESSORS
+> **Zone 1 —** `COGNITIVE APPRAISAL THEORY: INTERPRETING STRESSORS`
 
-**Zone 2**
-- This theory is central to understanding the individual stress response mechanism.
-- The interpretation or 'appraisal' of a stressor critically dictates subsequent outcomes.
+| Zone 2 | Zone 3 |
+|:--|:--|
+| This theory is central to understanding the individual stress response mechanism. | Appraise situations as manageable challenges versus overwhelming threats for better outcomes. |
+| The interpretation or 'appraisal' of a stressor critically dictates subsequent outcomes. | Fosters a proactive mindset in managing perceptions of demanding situations to cultivate beneficial responses. |
 
-**Zone 3**
-- Appraise situations as manageable challenges versus overwhelming threats for better outcomes.
-- Fosters a proactive mindset in managing perceptions of demanding situations to cultivate beneficial responses.
 </details>
 
 <details>
-<summary><strong>Slide 05 — Building Psychological Resilience</strong></summary>
+<summary>🟣 <strong>Slide 05 — Building Psychological Resilience</strong></summary>
+<br>
 
-**Zone 1:** BUILDING PSYCHOLOGICAL RESILIENCE
+> **Zone 1 —** `BUILDING PSYCHOLOGICAL RESILIENCE`
 
-**Zone 2**
-- Resilience explores the innate human capacity to adapt, recover, and even thrive amidst adversity.
-- Linked to the successful activation of a 'challenge response' and effective coping strategies.
+| Zone 2 | Zone 3 |
+|:--|:--|
+| Resilience explores the innate human capacity to adapt, recover, and even thrive amidst adversity. | Actively built through developing self-efficacy and practicing emotional regulation techniques. |
+| Linked to the successful activation of a 'challenge response' and effective coping strategies. | Leveraging robust social support systems is crucial for fostering resilience, not an absence of stress. |
 
-**Zone 3**
-- Actively built through developing self-efficacy and practicing emotional regulation techniques.
-- Leveraging robust social support systems is crucial for fostering resilience, not an absence of stress.
 </details>
 
 <details>
-<summary><strong>Slide 06 — Oxytocin: The Social Bonding Hormone</strong></summary>
+<summary>🟣 <strong>Slide 06 — Oxytocin: The Social Bonding Hormone</strong></summary>
+<br>
 
-**Zone 1:** OXYTOCIN: THE SOCIAL BONDING HORMONE
+> **Zone 1 —** `OXYTOCIN: THE SOCIAL BONDING HORMONE`
 
-**Zone 2**
-- Oxytocin plays a crucial role as a neuro-hormone that reduces fear and promotes pro-social behaviors.
-- Notably released during stressful periods when individuals seek or offer social support and connection.
+| Zone 2 | Zone 3 |
+|:--|:--|
+| Oxytocin plays a crucial role as a neuro-hormone that reduces fear and promotes pro-social behaviors. | Acts as a natural antidote to the typical 'fight-or-flight' response, encouraging 'tend-and-befriend'. |
+| Notably released during stressful periods when individuals seek or offer social support and connection. | Aids in healing, fostering courage, and strengthening social connection during times of heightened stress. |
 
-**Zone 3**
-- Acts as a natural antidote to the typical 'fight-or-flight' response, encouraging 'tend-and-befriend'.
-- Aids in healing, fostering courage, and strengthening social connection during times of heightened stress.
 </details>
 
 <details>
-<summary><strong>Slide 07 — Human Connection & Thriving with Stress</strong></summary>
+<summary>🟣 <strong>Slide 07 — Human Connection & Thriving with Stress</strong></summary>
+<br>
 
-**Zone 1:** HUMAN CONNECTION & THRIVING WITH STRESS
+> **Zone 1 —** `HUMAN CONNECTION & THRIVING WITH STRESS`
 
-**Zone 2**
-- Active human connection and robust social support networks are critical for effective stress management.
-- Engaging with others, offering help, or seeking connection during stress activates the 'tend and befriend' response.
+| Zone 2 | Zone 3 |
+|:--|:--|
+| Active human connection and robust social support networks are critical for effective stress management. | This mechanism, primarily facilitated by oxytocin, significantly enhances individual and collective well-being. |
+| Engaging with others, offering help, or seeking connection during stress activates the 'tend and befriend' response. | Reshape our relationship with stress to build profound resilience, foster empathy, and ultimately thrive in life. |
 
-**Zone 3**
-- This mechanism, primarily facilitated by oxytocin, significantly enhances individual and collective well-being.
-- Reshape our relationship with stress to build profound resilience, foster empathy, and ultimately thrive in life.
 </details>
 
 ---
 
 ## 🚀 Local Runtime Initialization
 
-**1. Activate the virtual environment**
+<table>
+<tr><td>1️⃣</td><td>
+
+**Activate the virtual environment**
 ```powershell
 .\.env_workspace\Scripts\activate
 ```
 
-**2. Install dependencies**
+</td></tr>
+<tr><td>2️⃣</td><td>
+
+**Install dependencies**
 ```powershell
 pip install -r requirements.txt
 ```
 
-**3. Launch the application**
+</td></tr>
+<tr><td>3️⃣</td><td>
+
+**Launch the application**
 ```powershell
 python app.py
 ```
 
-The app will boot a local Gradio server (default `http://127.0.0.1:7860/`), from which the Production Workspace shown above becomes accessible.
+</td></tr>
+</table>
+
+The app boots a local Gradio server at `http://127.0.0.1:7860/`, from which the Production Workspace shown above becomes accessible.
 
 ---
 
-*Built with Gradio · Powered by the Lumina OS multi-agent architecture.*
+<div align="center">
+
+<img src="https://img.shields.io/badge/-%20-6C3EDB?style=for-the-badge" height="6" width="820"/>
+
+**Built with 🔮 Gradio &nbsp;·&nbsp; Powered by the Lumina OS multi-agent architecture**
+
+<sub>© 2026 Lumina OS Project — Anamika Shah</sub>
+
+<img src="https://img.shields.io/badge/-%20-6C3EDB?style=for-the-badge" height="6" width="820"/>
+
+</div>
