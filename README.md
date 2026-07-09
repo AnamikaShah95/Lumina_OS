@@ -183,7 +183,10 @@ A single **`🚀 Trigger Lumina Engine`** action fires the backend compile job a
 > **Note:** GitHub strips `<script>` tags from rendered Markdown, so this can't run live inline on this page — it has to be opened as its own file. If you'd rather see it without cloning anything, host it via **GitHub Pages** (Settings → Pages → deploy from a branch containing `demo/`) and swap the link above for the live Pages URL.
 
 
-https://github.com/user-attachments/assets/6d98dec2-fc5d-4dd5-a503-0a73bdfcc559
+
+https://github.com/user-attachments/assets/fbad855d-f65e-4c2a-9cc6-c2479d7097a8
+
+
 
 ---
 
