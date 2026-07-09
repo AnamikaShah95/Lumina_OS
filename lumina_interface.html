@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lumina Video Architect</title>
+<style>
+  :root {
+    --bg: #0b0b0f;
+    --panel: #16161d;
+    --panel-2: #1c1c26;
+    --border: #2a2a36;
+    --accent: #6c5ce7;
+    --accent-hover: #7d6df0;
+    --text: #e8e8ee;
+    --text-dim: #9494a3;
+    --success: #34d399;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    padding: 32px 24px 64px;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #111116;
+    border: 1px solid var(--border);
+    border-radius: 10px 10px 0 0;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .browser-bar .url {
+    flex: 1;
+    background: #0b0b0f;
+    border-radius: 6px;
+    padding: 5px 10px;
+  }
+  .app {
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 28px 32px 40px;
+  }
+  h1 {
+    font-size: 26px;
+    margin: 0 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tagline { color: var(--text-dim); margin: 0 0 28px; font-size: 15px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+  .field-label {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  input[type="text"] {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  input[type="text"]:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  .subfield { margin-bottom: 18px; }
+  .subfield:last-child { margin-bottom: 0; }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .slider-row span { font-size: 12px; color: var(--text-dim); }
+  input[type="range"] {
+    flex: 1;
+    accent-color: var(--accent);
+  }
+  .count-box {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 14px;
+    min-width: 44px;
+    text-align: center;
+  }
+  select {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .trigger-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .trigger-btn:hover { background: var(--accent-hover); }
+  .trigger-btn:disabled { background: #3a3a46; color: var(--text-dim); cursor: progress; }
+  .results { min-height: 40px; }
+  .placeholder { color: var(--text-dim); font-size: 14px; }
+  .status-line { display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 14px; font-size: 15px; }
+  .status-line.ok { color: var(--success); }
+  .meta-row { font-size: 14px; color: var(--text-dim); line-height: 1.8; }
+  .meta-row b { color: var(--text); }
+  .pill { background: var(--panel-2); border: 1px solid var(--border); padding: 1px 8px; border-radius: 6px; font-size: 12.5px; color: var(--text); }
+  .download-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 16px 0 8px;
+  }
+  .download-btn:hover { background: var(--accent-hover); }
+  .file-row {
+    display: flex;
+    justify-content: space-between;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+  }
+  .file-row .size { color: var(--accent); }
+  .dots::after { content: ''; display: inline-block; width: 6px; }
+  .spin {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  footer { text-align: center; color: var(--text-dim); font-size: 12.5px; margin-top: 24px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="browser-bar">
+    <span>&#8592;</span><span>&#8594;</span><span>&#8635;</span>
+    <div class="url">http://127.0.0.1:7860/</div>
+  </div>
+
+  <div class="app">
+    <h1>&#128302; Lumina Video Architect &mdash; OS Frontend Core v2.3 (Toast Engine)</h1>
+    <p class="tagline">Transform video data streams into custom, automated PowerPoint presentations with fine-tuned user controls.</p>
+
+    <div class="grid">
+      <!-- LEFT: controls -->
+      <div>
+        <div class="card">
+          <span class="field-label">Enter Request Query or YouTube Video Link</span>
+          <input type="text" id="videoUrl" value="https://youtu.be/RcGyVTAoXEU?si=k-CCWgQUd7yQ-FZy">
+        </div>
+
+        <div class="card">
+          <div class="settings-header">
+            <span>&#9881; Advanced Presentation Settings</span>
+            <span>&#9660;</span>
+          </div>
+
+          <div class="subfield">
+            <span class="field-label">Target Slide Count</span>
+            <div class="slider-row">
+              <span>3</span>
+              <input type="range" id="slideCount" min="3" max="15" step="1" value="7">
+              <span>15</span>
+              <div class="count-box" id="slideCountOut">7</div>
+            </div>
+          </div>
+
+          <div class="subfield">
+            <span class="field-label">Audience Depth Level</span>
+            <select id="audienceDepth">
+              <option>Advanced Engineering</option>
+              <option>General Audience</option>
+              <option>Executive Summary</option>
+              <option>Beginner Friendly</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="trigger-btn" id="triggerBtn">&#128640; Trigger Lumina Engine</button>
+      </div>
+
+      <!-- RIGHT: results -->
+      <div class="card results" id="resultsPanel">
+        <p class="placeholder">Results will appear here once the engine runs.</p>
+      </div>
+    </div>
+
+    <footer>Use via API &nbsp;&middot;&nbsp; Built with Gradio &nbsp;&middot;&nbsp; Settings &#9881;</footer>
+  </div>
+</div>
+
+<script>
+  const slideCount = document.getElementById('slideCount');
+  const slideCountOut = document.getElementById('slideCountOut');
+  slideCount.addEventListener('input', () => {
+    slideCountOut.textContent = slideCount.value;
+  });
+
+  const triggerBtn = document.getElementById('triggerBtn');
+  const resultsPanel = document.getElementById('resultsPanel');
+
+  const PHASES = [
+    { label: 'Phase 1: Fetch', ms: 900 },
+    { label: 'Phase 2: Summary', ms: 700 },
+    { label: 'Phase 3: Schema', ms: 600 },
+    { label: 'Phase 4: Assembly', ms: 300 }
+  ];
+
+  triggerBtn.addEventListener('click', async () => {
+    triggerBtn.disabled = true;
+    triggerBtn.innerHTML = '<span class="spin"></span> Compiling<span class="dots"></span>';
+
+    let log = '';
+    resultsPanel.innerHTML = `<div class="status-line" style="color:var(--text-dim)"><span class="spin"></span> Running compile pipeline...</div><div class="meta-row" id="liveLog"></div>`;
+    const liveLog = document.getElementById('liveLog');
+
+    for (const phase of PHASES) {
+      await new Promise(r => setTimeout(r, phase.ms));
+      log += `${phase.label} &#10003;<br>`;
+      liveLog.innerHTML = log;
+    }
+
+    const depth = document.getElementById('audienceDepth').value;
+    const count = slideCount.value;
+
+    resultsPanel.innerHTML = `
+      <div class="status-line ok">&#127881; Presentation Compiled Successfully!</div>
+      <div class="meta-row">
+        <b>Metrics Dashboard:</b> Total process executed in <b>44.84 seconds</b><br>
+        &#9881; <b>Extraction Mode:</b> Layer resolved via <span class="pill">Generative AI Fallback Engine</span> standard.<br>
+        &#128190; <b>Context Topic Heading:</b> How to Make Stress Your Friend (TED Session Analysis)<br>
+        &#128200; <b>Deck Config:</b> ${count} slides &middot; ${depth}<br><br>
+        &#128190; <b>Storage Vector:</b> Clean presentation artifact locked. You can now download the file underneath!
+      </div>
+      <button class="download-btn">&#128196; Download Generated PowerPoint (.pptx)</button>
+      <div class="file-row">
+        <span>Lumina_Presentation_${Date.now()}.pptx</span>
+        <span class="size">41.8 KB &#8595;</span>
+      </div>
+    `;
+
+    triggerBtn.disabled = false;
+    triggerBtn.innerHTML = '&#128640; Trigger Lumina Engine';
+  });
+</script>
+</body>
+</html>
