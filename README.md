@@ -176,7 +176,6 @@ A single **`🚀 Trigger Lumina Engine`** action fires the backend compile job a
 
 **[▶ Open the interactive mockup](./lumina_interface.html)**
 
-
 *Clone the repo and open `lumina_interface.html` in any browser — drag the slide-count slider, pick an audience depth, and click Trigger Lumina Engine to watch a simulated 4-phase compile run through to a mock download.*
 
 </div>
