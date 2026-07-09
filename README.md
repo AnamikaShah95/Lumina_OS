@@ -10,8 +10,9 @@
 
 <br>
 
-**Transform video data streams into custom, automated PowerPoint presentations —**
-*fine-tuned user controls, high-intensity inline parsing, zero-leak thread management.*
+<a href="#">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&duration=2500&pause=900&color=A78BFA&center=true&vCenter=true&multiline=true&repeat=true&width=780&height=60&lines=Transform+video+data+streams+into+automated+PowerPoint+decks;Fine-tuned+controls+%C2%B7+high-intensity+parsing+%C2%B7+zero-leak+threads;Fetch+%E2%86%92+Summarize+%E2%86%92+Schema+%E2%86%92+Assemble+%E2%86%92+Deliver" alt="Typing SVG" />
+</a>
 
 <br>
 
@@ -20,6 +21,12 @@
 [![python--pptx](https://img.shields.io/badge/python--pptx-Compiler-B4009E?style=for-the-badge)](.)
 [![Status](https://img.shields.io/badge/Status-Production-2ECC71?style=for-the-badge)](.)
 [![License](https://img.shields.io/badge/License-MIT-9B59B6?style=for-the-badge)](.)
+
+<br>
+
+[![Repo Views](https://komarev.com/ghpvc/?username=lumina-video-architect&label=Repo%20Views&color=6C3EDB&style=for-the-badge)](.)
+[![Avg Compile](https://img.shields.io/badge/Avg%20Compile-44.84s-2ECC71?style=for-the-badge)](.)
+[![Slides](https://img.shields.io/badge/Deck%20Size-7--Slide%20Matrix-F96167?style=for-the-badge)](.)
 
 <br>
 
@@ -83,6 +90,32 @@ flowchart LR
 
 </div>
 
+<br>
+
+<div align="center">
+
+### 🎞️ Request Lifecycle
+
+```mermaid
+sequenceDiagram
+    actor U as User
+    participant UI as Gradio UI
+    participant TP as ThreadPoolExecutor
+    participant EN as Compile Engine
+
+    U->>UI: Enter URL + set slide count/depth
+    U->>UI: 🚀 Trigger Lumina Engine
+    UI->>TP: submit(compile_presentation)
+    activate TP
+    TP->>EN: Fetch → Summarize → Schema → Assemble
+    EN-->>TP: .pptx artifact + OXML prune
+    TP-->>UI: filepath
+    deactivate TP
+    UI-->>U: 📦 Download Generated PowerPoint
+```
+
+</div>
+
 ---
 
 ## 📑 Table of Contents
@@ -93,6 +126,7 @@ flowchart LR
 ⚙️ [Engineering Pillars](#️-system-core-engineering-pillars) &nbsp;•&nbsp;
 📊 [Output Showcase](#-sample-output-showcase) &nbsp;•&nbsp;
 📂 [Slide Payload](#-generated-presentation-payload--7-slide-corporate-matrix) &nbsp;•&nbsp;
+🗺️ [Roadmap](#️-roadmap) &nbsp;•&nbsp;
 🚀 [Quick Start](#-local-runtime-initialization)
 
 </div>
@@ -296,6 +330,24 @@ Each slide follows a **Three-Zone Layout Alignment Grid**: Zone 1 (visual contex
 | Engaging with others, offering help, or seeking connection during stress activates the 'tend and befriend' response. | Reshape our relationship with stress to build profound resilience, foster empathy, and ultimately thrive in life. |
 
 </details>
+
+---
+
+## 🗺️ Roadmap
+
+<div align="center">
+
+| Status | Milestone |
+|:---:|:--|
+| ✅ | Core 4-phase compile pipeline (fetch → summarize → schema → assemble) |
+| ✅ | Thread-offloaded execution via `ThreadPoolExecutor(4)` |
+| ✅ | OXML tree pruning + `gc.collect()` memory audit |
+| ✅ | Secure log masking for credentials in stdout |
+| 🔄 | Streaming phase-by-phase progress in the Async Stream Terminal |
+| ⬜ | Template theme picker (multiple corporate color palettes) |
+| ⬜ | Batch mode — compile multiple video URLs in one queue |
+
+</div>
 
 ---
 
