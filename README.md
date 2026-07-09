@@ -170,6 +170,20 @@ A single **`🚀 Trigger Lumina Engine`** action fires the backend compile job a
 
 ---
 
+## 🖥️ Interactive Demo
+
+<div align="center">
+
+**[▶ Open the interactive mockup](./lumina_interface.html)**
+
+*Clone the repo and open `lumina_interface.html` in any browser — drag the slide-count slider, pick an audience depth, and click Trigger Lumina Engine to watch a simulated 4-phase compile run through to a mock download.*
+
+</div>
+
+> **Note:** GitHub strips `<script>` tags from rendered Markdown, so this can't run live inline on this page — it has to be opened as its own file. If you'd rather see it without cloning anything, host it via **GitHub Pages** (Settings → Pages → deploy from a branch containing `demo/`) and swap the link above for the live Pages URL.
+
+---
+
 ## ⚙️ System Core Engineering Pillars
 
 <table>
